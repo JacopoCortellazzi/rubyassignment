@@ -1,9 +1,11 @@
 class Array
 	def select_first(args)
 		puts args.class
-		args.each_key do |key|
-			self.each do |e|
-				puts e.#{key}
+		self.each do |e|
+			args.each_pair do |key, value|
+				if e.send(key) == value
+					puts e.name
+				end
 			end
 		end
 	end
