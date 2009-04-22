@@ -16,17 +16,17 @@ class Array
 	end
 
 	def select_single(args)
-		@key = args.keys[0]
-		@value = args[@key]
+		key = args.keys[0]
+		value = args[key]
 		self.each do |e|
-			if @value.class == Array
-				@value.each do |val|
-					if e.send(@key) == val
+			if value.class == Array
+				value.each do |val|
+					if e.send(key) == val
 						return e
 						break
 					end
 				end
-			elsif e.send(@key) == @value
+			elsif e.send(key) == value
 				return e
 			end
 		end	
