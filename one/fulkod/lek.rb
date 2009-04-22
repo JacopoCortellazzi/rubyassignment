@@ -1,5 +1,6 @@
 class Bajs
-	:konsistens => 'mjukt'
+	:konsistens
+	
 	def print
 		puts konsistens
 	end
