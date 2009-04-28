@@ -1,5 +1,4 @@
 class Array
-
   def select_first(args)
     if args.size == 1
       stop = false
@@ -77,4 +76,10 @@ class Array
       end
     end
   end
+  
+  def method_missing(method_name, *args)
+    puts method_name
+  end
+  
+  
 end
