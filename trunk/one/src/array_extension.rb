@@ -34,5 +34,11 @@ class Array
 
 	def select_all
 	end
+	
+	def method_missing(method, *args)
+        attribute = method.match(/select_first_where_(.*)_is/)[1]
+        if attribute
+            select_first(attribute.to_sym => *args)
+        end
+    end
 end
-
