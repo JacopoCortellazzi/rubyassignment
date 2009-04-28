@@ -1,7 +1,7 @@
 class Array
 	def select_first(args)
-		puts args
-		puts args.size
+		#puts args
+		#puts args.size
 		if args.length == 1 
 			select_single(args)
 		elsif args.length == 2
@@ -36,9 +36,11 @@ class Array
 	end
 	
 	def method_missing(method, *args)
-        attribute = method.match(/select_first_where_(.*)_is/)[1]
-        if attribute
-            select_first(attribute.to_sym => *args)
+        if attribute = method.to_s.match(/^select_first_where_(.*)_is$/)
+            select_first(attribute[1].to_sym => args)
+        elsif attribute = method.to_s.match(/^select_first_where_(.*)_is_in$/)
+            select_first(:name => attribute[1].to_sym, :interval => {:min => args[0], 
+                            :max => args[1]})
         end
     end
 end
