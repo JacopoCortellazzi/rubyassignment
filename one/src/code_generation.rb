@@ -2,7 +2,7 @@
 
 class MyDSL
     
-    def self.load( filename )
+    def loadFile( filename )
         title = /title\s*:(.*)\n/
         file = File.open( filename, "r" )
         while( line = file.gets )

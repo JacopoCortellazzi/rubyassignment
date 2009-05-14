@@ -1,0 +1,3 @@
+title :Person
+attribute :name, String
+attribute :age, Fixnum
