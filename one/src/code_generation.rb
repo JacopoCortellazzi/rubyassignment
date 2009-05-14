@@ -1,18 +1,16 @@
 # code_generation.rb
 
-#module Model
-
-	#def generate( path )
-
-	#end
-
 class MyDSL
-	
-	def self.load( filename )
-	    title = /title\s*:(.*)\n/
-	    file = File.open( filename, "r" )
-	    #while(line = file.gets)
-	    file.each { |line| do if line.match( title ) makeClass( title[1] ) }
+    
+    def self.load( filename )
+        title = /title\s*:(.*)\n/
+        file = File.open( filename, "r" )
+        while( line = file.gets )
+            if tmp = line.match( title )
+                makeClass( tmp[1] )
+            end
+        end
+        file.close   
 	end
 	
 	def makeClass( args )
