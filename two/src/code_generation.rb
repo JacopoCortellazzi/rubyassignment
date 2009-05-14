@@ -9,7 +9,6 @@ class CodeGenerator
         createNewClass($1)
       end
       if(line.match(attributeReg))
-        puts line
         createNewAttribute($1)
       end
     end
