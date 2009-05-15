@@ -28,25 +28,23 @@ class CodeGenerator
   end
 
   def addConstraint(args)
-    key = args.keys.to_s
-    value = args.values
-    puts key.class
-    if(@myClass.method_defined?(key))
+    # key = args.keys.to_s
+    # value = args.values
+    alias_method :createNewAttribute, :newMethod 
+    def newMethod(args)
       if(value.to_s.eql?("!= nil"))
-        #if("#{@myClass}.#{key}" != nil)
-        #  puts "OK"
-        #end
+        if(key != nil)
+          createNewAttribute(args.keys)
+          puts "OK"
+        end
       end
-      if(value.to_s.eql?("size > 0"))
-        #puts args.values
-      end
-      if(value.to_s.eql?("=~ /^[A-Z]/"))
-        #puts args.values
-      end
-      puts "Value: ",value
-      if(value.to_s.eql?(">= 0"))
-        #puts args.values
-      end
+      # if(value.to_s.eql?("size > 0"))
+      # end
+      # if(value.to_s.eql?("=~ /^[A-Z]/"))
+      # end
+      # puts "Value: ",value
+      # if(value.to_s.eql?(">= 0"))
+      # end
     end
   end
 end
