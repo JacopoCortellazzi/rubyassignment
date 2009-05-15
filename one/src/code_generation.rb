@@ -16,47 +16,53 @@ class MyDSL
     end
     
     def attribute(sym, args)
-		@newClass.instance_eval("@#{sym} = 0")
-      set_attr_writer( sym )
-      set_attr_reader( sym )
+      set_attr_writer( sym, args )
+      set_attr_reader( sym, args )
     end
 
-	def set_initializer(sym)
-		@newClass.class_eval("alias_method :old_initialize, :initialize")
-		def initialize(arg)
-			@#{sym} = 0
-			old_initialize(
-		
-
-   def set_attr_writer(sym)
+   def set_attr_writer(sym, args)
+        p sym.to_s+", "+args.to_s
         @newClass.class_eval %{def #{sym}= (val)
-                        #if val.class == #{sym}.class
+                        p "attr_writer for #{sym}, #{args}, "+val.to_s
+                        if val.kind_of? #{args}
                             @#{sym} = val
-                        #end
+                        else
+                            raise val.to_s+" is not #{args}"
+                        end
                      end}
    end
    
-   def set_attr_reader(sym)
+   def set_attr_reader(sym, args)
         @newClass.class_eval %{def #{sym}
+                        p "attr_reader for #{sym}"
                         @#{sym}
                      end}
     end
-  
-#def constraint(sym, args)
-#	p "constraint"
-#end
 
 	def constraint(sym, args)
-	@newClass.class_eval("alias_method :old_attr_writer, :#{sym}=")
-	@newClass.class_eval %{def #{sym}= (val)
-			if #{args}
-				old_attr_writer(val)
-			else raise "value out of bounds: #{args}"
-			end
-		end}
-  	
-   	p sym.to_s+args
-  end
+	    @newClass.class_eval("alias_method :old_#{sym}=, :#{sym}=")
+        @newClass.class_eval %{def #{sym}=(val)
+                                 old_#{sym}=(val)
+                               end
+        }
+	end
+#	@newClass.class_eval("alias_method :old_#{sym}_writer, :#{sym}=")
+#	@newClass.class_eval %{def #{sym}= (val)
+#			old_#{sym}_writer(val)
+#            if @#{sym} != nil
+#			    if #{args}
+#                    #old_#{sym}_writer(val)
+#			    	@#{sym} = val
+#			    else 
+#			        raise "value out of bounds: #{args}"
+#			    end
+#			else
+#			    @#{sym} = val
+#			end
+#		end}
+# 	
+#   	p sym.to_s+args
+#  end
 		#		@#{sym} = val
    
    #alias_method :old_attr_writer, ?
