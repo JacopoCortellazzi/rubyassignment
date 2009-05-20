@@ -14,11 +14,11 @@ class CodeGenerator
         createNewAttribute($1 => $2)
       end
       if(line.match(constraintReg))
-        @constraints << {$1 => $2}
+        @constraints<<{$1 => $2}
       end
     end
     file.close
-    makeConstraintMethod()
+    @myClass.class_eval{class_variable_set :@@constraints ,@constraints} 
   end
 
   def createNewClass(args)
