@@ -18,6 +18,7 @@ class CodeGenerator
       end
     end
     file.close
+    makeConstraintMethod()
   end
 
   def createNewClass(args)
@@ -87,6 +88,47 @@ class CodeGenerator
           end
         end
       end   
+    end
+    # FIXA MED CLASS EVAL!!!!!!!
+    def makeConstraintMethod()
+      
+      @myClass.class_eval %{def checkConstraint(attribute, value_to_be_checked)
+      valid = true
+      constraints.each do |p|
+        p.each_pair do |key, value|
+          key.each do |k|
+            if(k == attribute)
+              if(value.to_s.eql?("!= nil"))
+                if(!value_to_be_checked != nil)
+                  valid = false
+                  break
+                end
+              end
+              if(value.to_s.eql?("size > 0"))
+                if(!value_to_be_checked.size > 0)
+                  valid = false
+                  break
+                end
+              end
+              if(value.to_s.eql?("=~ /^[A-Z]/"))
+                if(!value_to_be_checked.match(/[A-Z]/))
+                  valid = false
+                  break
+                end
+              end
+              if(value.to_s.eql?(">= 0"))
+                if(!value_to_be_checked >= 0)
+                  valid = false
+                  break
+                end
+              end
+            end
+          end
+        end
+      end 
+                  end}
+    
+    
     end
   
 end
