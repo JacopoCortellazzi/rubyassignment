@@ -31,8 +31,14 @@ class CodeGenerator
 
   def set_attr_writer(sym, type)
       @myClass.class_eval %{def #{sym}=(val)
-                    if(val.kind_of? #{type} && checkConstraint(#{sym}, val))
-                      @#{sym} = val
+                    puts val
+                    if(val.kind_of? #{type})
+                      puts "Value är av samma typ"
+                      if(checkConstraint(#{sym}, val))
+                        @#{sym} = val
+                      else
+                        raise "Value did match not constraints"
+                      end
                     else
                       raise "Type Error"
                     end
