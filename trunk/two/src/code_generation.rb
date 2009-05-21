@@ -1,10 +1,10 @@
+require "yaml"
 class CodeGenerator
 
   def loadFile(args)
     titleReg = /title\s*:(.*)\n/
     attributeReg = /\s*attribute\s*:(.*),\s*(.*)\n*/  
     constraintReg = /\s*constraint\s*:(.*),\s*'[a-z A-Z]*\.*(.*)'\n*/  
-    #@constraints = Array.new
     file = File.new(args, "r")
     while(line = file.gets)
       if(line.match(titleReg))
@@ -15,7 +15,6 @@ class CodeGenerator
       end
       if(line.match(constraintReg))
         createConstraints($1 => $2)
-        #@constraints<<{$1 => $2}
       end
     end
     file.close  
@@ -24,6 +23,9 @@ class CodeGenerator
 
   def createNewClass(args)
     @myClass = Object.const_set(args,Class.new)
+    @myClass.class_eval %{def self.load_from_file(fileName)
+      YAML.load_file(fileName)
+      end}
   end
 
   def createNewAttribute(args)
@@ -42,7 +44,7 @@ class CodeGenerator
       if(checkConstraint(:#{sym}, val))
         @#{sym} = val
       else
-        raise "Value did match not constraints"
+        raise "Invalid value"
       end
     else
       raise "Type Error"
@@ -59,7 +61,6 @@ end
 end
 
 def makeConstraintsMethod()
-
   @myClass.class_eval %{def checkConstraint(attribute, value_to_be_checked)
     valid = true
     @@const.each do |p|
