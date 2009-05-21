@@ -17,11 +17,9 @@ class MyDSL
     end
     
     def attribute(sym, args)
-      set_attr_writer(sym)
-      set_attr_reader(sym)
-#	 	@newClass.class_eval %{instance_variable_set :@#{sym}, #{args}.new}
-		@newClass.class_eval %{instance_variable_set :@#{sym}, nil}
-		@newClass.class_eval %{class_variable_set :@@#{sym}_constraints, Array.new}
+        set_attr_writer(sym)
+        set_attr_reader(sym)
+        @newClass.class_eval %{class_variable_set :@@#{sym}_constraints, Array.new}
     end
 
    def set_attr_writer(sym)
@@ -42,7 +40,8 @@ class MyDSL
 										end
 									end
 								end
-                     end}
+                     end
+       }
    end
    
    def set_attr_reader(sym)
@@ -55,19 +54,7 @@ class MyDSL
 	def constraint(sym, args)
 		@newClass.class_eval %{	p "adding constraint "+sym.to_s+" "+%(#{args})
 											@@#{sym}_constraints << %(#{args})
-										}
-#		@newClass.class_eval("alias_method :old_#{sym}_writer, :#{sym}=")
-#		@newClass.class_eval %{def #{sym}= (val)
-#			old_#{sym} = @#{sym}
-#			@#{sym} = val
-#			if #{args}
-#				if @#{sym}.nil?; @#{sym} = 0; end
-#				old_#{sym}_writer(val)
-#			else 
-#				@#{sym} = old_#{sym}
-#				raise "value out of bounds: #{args}"
-#			end
-#		end}
+		}
 	end
 
 end
