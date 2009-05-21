@@ -17,8 +17,27 @@ class CodeGenerator
         createConstraints($1 => $2)
       end
     end
-    file.close  
+    file.close
     makeConstraintsMethod()
+    return self
+  end
+  
+
+
+  def load_from_file(file)
+    attributes = []
+    values = []
+    f = YAML.load_file(file)
+      f.each do |key, args|
+      @arrayName = key
+        args.each do |a|
+          a.each do |key , value|
+            attributes << key
+            values << value
+          end
+          return @myClass.new(attributes, values)          
+        end   
+      end
   end
 
   def createNewClass(args)
@@ -26,6 +45,10 @@ class CodeGenerator
     @myClass.class_eval %{def self.load_from_file(fileName)
       YAML.load_file(fileName)
       end}
+    @myClass.class_eval %{def initialize(attri, vali)
+                          
+                        end}
+                         #self.method(#{attri[0]}).call(vali[0])
   end
 
   def createNewAttribute(args)
