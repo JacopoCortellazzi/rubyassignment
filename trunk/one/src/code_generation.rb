@@ -11,28 +11,41 @@ class MyDSL
     end
     
     def title(sym)
-        @newClass = Object.const_set(sym, Class.new)
-        puts @newClass
+		@newClass = Object.const_set(sym, Class.new)
+
+		puts @newClass
     end
     
     def attribute(sym, args)
-      set_attr_writer( sym, args )
-      set_attr_reader( sym, args )
+      set_attr_writer(sym)
+      set_attr_reader(sym)
+#	 	@newClass.class_eval %{instance_variable_set :@#{sym}, #{args}.new}
+		@newClass.class_eval %{instance_variable_set :@#{sym}, nil}
+		@newClass.class_eval %{class_variable_set :@@#{sym}_constraints, Array.new}
     end
 
-   def set_attr_writer(sym, args)
-        p sym.to_s+", "+args.to_s
+   def set_attr_writer(sym)
         @newClass.class_eval %{def #{sym}= (val)
-                        p "attr_writer for #{sym}, #{args}, "+val.to_s
-                        if val.kind_of? #{args}
-                            @#{sym} = val
-                        else
-                            raise val.to_s+" is not #{args}"
-                        end
+                        p "attr_writer for #{sym}"
+		  						old_#{sym} = @#{sym}
+								@#{sym} = val
+		  						p #{sym}.class
+								p val.class
+								if @@#{sym}_constraints.nil?
+									p "no constraints"
+								else p @@#{sym}_constraints.to_s
+									@@#{sym}_constraints.each do |c|
+										#p "constraint: "+c+", value: "+val.to_s+", sym: "+#{sym}.to_s
+										if !eval(c)
+											@#{sym} = old_#{sym}
+											raise "Value not allowed: "+val.to_s+" rule "+c
+										end
+									end
+								end
                      end}
    end
    
-   def set_attr_reader(sym, args)
+   def set_attr_reader(sym)
         @newClass.class_eval %{def #{sym}
                         p "attr_reader for #{sym}"
                         @#{sym}
@@ -40,33 +53,21 @@ class MyDSL
     end
 
 	def constraint(sym, args)
-	    @newClass.class_eval("alias_method :old_#{sym}=, :#{sym}=")
-        @newClass.class_eval %{def #{sym}=(val)
-                                 old_#{sym}=(val)
-                               end
-        }
-	end
-#	@newClass.class_eval("alias_method :old_#{sym}_writer, :#{sym}=")
-#	@newClass.class_eval %{def #{sym}= (val)
-#			old_#{sym}_writer(val)
-#            if @#{sym} != nil
-#			    if #{args}
-#                    #old_#{sym}_writer(val)
-#			    	@#{sym} = val
-#			    else 
-#			        raise "value out of bounds: #{args}"
-#			    end
-#			else
-#			    @#{sym} = val
+		@newClass.class_eval %{	p "adding constraint "+sym.to_s+" "+%(#{args})
+											@@#{sym}_constraints << %(#{args})
+										}
+#		@newClass.class_eval("alias_method :old_#{sym}_writer, :#{sym}=")
+#		@newClass.class_eval %{def #{sym}= (val)
+#			old_#{sym} = @#{sym}
+#			@#{sym} = val
+#			if #{args}
+#				if @#{sym}.nil?; @#{sym} = 0; end
+#				old_#{sym}_writer(val)
+#			else 
+#				@#{sym} = old_#{sym}
+#				raise "value out of bounds: #{args}"
 #			end
 #		end}
-# 	
-#   	p sym.to_s+args
-#  end
-		#		@#{sym} = val
-   
-   #alias_method :old_attr_writer, ?
-    
-    #def method_missing( sym, args )
-    #end
+	end
+
 end
