@@ -1,9 +1,9 @@
 tests:
    - name        : Ojohan
-     age         : 26
+     age         : -26
    - name        : Tobias
      age         : 29
-   - name        : Beatrice
+   - name        : beatrice
      age         : 32
    - name        : FauxBeatrice
      age         : 400
