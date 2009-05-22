@@ -37,7 +37,7 @@ class Model
     
     def attribute(sym, args)
       set_attr_writer( sym, args )
-      set_attr_reader( sym, args )
+      set_attr_reader( sym )
 	  @newClass.class_eval %{class_variable_set :@@#{sym}_constraints, Array.new}
     end
 
@@ -62,7 +62,7 @@ class Model
 	    }
     end
    
-    def set_attr_reader(sym, args)
+    def set_attr_reader(sym)
         @newClass.class_eval %{def #{sym}
                         @#{sym}
                      end
