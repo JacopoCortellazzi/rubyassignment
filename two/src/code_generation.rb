@@ -1,5 +1,5 @@
 require "yaml"
-class CodeGenerator
+class Model
 
   def loadFile(args)
     titleReg = /title\s*:(.*)\n/
@@ -27,6 +27,7 @@ class CodeGenerator
   def load_from_file(file)
     attributes = []
     values = []
+    ret = []
     f = YAML.load_file(file)
       f.each do |key, args|
       @arrayName = key
@@ -34,10 +35,13 @@ class CodeGenerator
           a.each do |key , value|
             attributes << key
             values << value
-          end
-          return @myClass.new(attributes, values)          
-        end   
+          end 
+          ret << @myClass.new(attributes, values)
+          attributes = []
+          values = []          
+        end
       end
+      return ret
   end
 
   def createNewClass(args)
@@ -46,8 +50,10 @@ class CodeGenerator
       YAML.load_file(fileName)
       end}
     @myClass.class_eval %{def initialize(attri, vali)
-                          
-                        end}
+                           for i in 1..attri.size() do
+                           self.method("#\{attri[i-1]\}=").call(vali[i-1])
+                           end
+                         end}
                          #self.method(#{attri[0]}).call(vali[0])
   end
 

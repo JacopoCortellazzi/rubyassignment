@@ -1,5 +1,5 @@
 tests:
-   - name        : Johan
+   - name        : Ojohan
      age         : 26
    - name        : Tobias
      age         : 29
@@ -8,6 +8,4 @@ tests:
    - name        : FauxBeatrice
      age         : 400
    - name        : Tobias
-     age         : -29
-   - name        : Marve Flexnes
-     misc        : Deeeeo
+     age         : 29
