@@ -7,8 +7,22 @@ class Model
     def self.generate(filename)
         dsl = new
         dsl.instance_eval(File.read(filename))
-        dsl
-		  #return dsl.newClass
+			dsl.instance_eval %{require 'yaml'
+									def self.load_from_file(filename)
+										arr = YAML::load(File.open(filename)).values[0]
+										ret = Array.new
+										arr.each do |n|
+											begin
+												obj = @newClass.new(n)
+												ret << obj
+											rescue
+											end
+										end
+										p ret
+										return ret
+									end
+			}
+			dsl
     end
 
 #	def self.generate(filename)
@@ -17,31 +31,13 @@ class Model
     
     def title(sym)
 		@newClass = Object.const_set(sym, Class.new)
-		@newClass.class_eval %{require 'yaml'
+		@newClass.class_eval %{
 									def initialize(args)
 										args.each do |arg|
 											self.method("#\{arg[0]\}=").call(arg[1])
 										end
 									end
 
-									def self.load_from_file(filename)
-										arr = YAML::load(File.open(filename)).values[0]
-										ret = Array.new
-										arr.each do |n|
-											begin
-												obj = self.new(n)
-												ret << obj
-											rescue
-											end
-										end
-										return ret
-									end
-
-									def self.method_missing(method, *args)
-										p method
-										p args
-										return nil
-									end
 									}
 		puts @newClass
     end
