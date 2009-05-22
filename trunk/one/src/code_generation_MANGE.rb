@@ -1,18 +1,38 @@
 # code_generation.rb
 
-#require 'dslhelper_attr_writer'
+class Model
 
-class MyDSL
-    
-    def self.load(filename)
+    def self.generate(filename)
         dsl = new
         dsl.instance_eval(File.read(filename))
-        dsl
+        dsl.instance_eval %{
+                        require "yaml"  
+									def self.load_from_file(filename)
+										arr = YAML::load(File.open(filename)).values[0]
+										ret = Array.new
+										arr.each do |n|
+											begin
+												obj = @newClass.new(n)
+												ret << obj
+											rescue
+											end
+										end
+										p ret
+										return ret
+									end
+		}
+        return dsl
     end
 
     def title(sym)
         @newClass = Object.const_set(sym, Class.new)
-        puts @newClass
+        @newClass.class_eval %{
+								def initialize(args)
+									args.each do |arg|
+										self.method("#\{arg[0]\}=").call(arg[1])
+									end
+								end
+        }
     end
     
     def attribute(sym, args)
@@ -21,31 +41,7 @@ class MyDSL
 	  @newClass.class_eval %{class_variable_set :@@#{sym}_constraints, Array.new}
     end
 
-   def set_attr_writer(sym)
-        @newClass.class_eval %{def #{sym}= (val)
-                        p "attr_writer for #{sym}"
-		  						old_#{sym} = @#{sym}
-								@#{sym} = val
-		  						p #{sym}.class
-								p val.class
-								#
-								if @@#{sym}_constraints.nil?
-									p "no constraints"
-								else p @@#{sym}_constraints.to_s
-									@@#{sym}_constraints.each do |c|
-										#p "constraint: "+c+", value: "+val.to_s+", sym: "+#{sym}.to_s
-										if !eval(c)
-											@#{sym} = old_#{sym}
-											raise "Value not allowed: "+val.to_s+" rule "+c
-										end
-									end
-								end
-                     end
-       }
-   end
-
-
-   def set_attr_writer(sym, args)
+    def set_attr_writer(sym, args)
         p sym.to_s+", "+args.to_s
         @newClass.class_eval %{def #{sym}= (val)
                         if val.kind_of? #{args}
@@ -66,7 +62,7 @@ class MyDSL
 	    }
     end
    
-   def set_attr_reader(sym, args)
+    def set_attr_reader(sym, args)
         @newClass.class_eval %{def #{sym}
                         @#{sym}
                      end
