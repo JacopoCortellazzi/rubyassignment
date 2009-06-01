@@ -26,7 +26,6 @@ class AssignmentThree {
                                                 "../doc/phonenumbers.txt") );
             while ( brNumbers.ready() ) {
                 numbers.add( brNumbers.readLine() );
-                System.out.println(brNumbers.readLine());
             }
             brWords.close();
             brNumbers.close();
@@ -40,6 +39,10 @@ class AssignmentThree {
         System.out.println(wordsByNumbers.toString());   
         for (int i = 0; i < words.size(); i++) {
             System.out.println( words.get(i) ); 
+        }
+        System.out.println();
+        for (int i = 0; i < numbers.size(); i++) {
+            System.out.println( numbers.get(i) );
         }
     }
     
