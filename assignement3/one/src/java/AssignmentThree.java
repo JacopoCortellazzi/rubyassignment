@@ -6,7 +6,6 @@ class AssignmentThree {
     private ArrayList<String> words = new ArrayList<String>();
     private ArrayList<String> numbers = new ArrayList<String>();
     private HashMap<String, String> wordsByNumbers = new HashMap<String, String>();
-    private HashMap<String, char[]> mapping = new HashMap<String, char[]>();
     private String[] combinations = {"e","jnq","rwx","dsy","ft","am","civ",
                                                             "bku","lop","ghz"};
     public AssignmentThree () {
@@ -18,19 +17,19 @@ class AssignmentThree {
             BufferedReader brWords = new BufferedReader( new FileReader(
                                                     "../doc/dictionary.txt") );
             while ( brWords.ready() ) {
-                String line = brWords.readLine();//.toLowerCase();
-                //System.out.println(line);
+                String line = brWords.readLine().toLowerCase();
                 words.add( line );
-                wordsByNumbers.put(tmp, (matchWordToNumbers( tmp )));
+                wordsByNumbers.put(line, (matchWordToNumbers( line )));
+
             }
-            //BufferedReader brNumbers = new BufferedReader( new FileReader(
-            //                                    "../doc/phonenumbers.txt") );
-            //while ( brNumbers.readLine() != null ) {
-            //    numbers.add( brNumbers.readLine() );
-            //    System.out.println(brNumbers.readLine());
-            //}
+            BufferedReader brNumbers = new BufferedReader( new FileReader(
+                                                "../doc/phonenumbers.txt") );
+            while ( brNumbers.ready() ) {
+                numbers.add( brNumbers.readLine() );
+                System.out.println(brNumbers.readLine());
+            }
             brWords.close();
-            //brNumbers.close();
+            brNumbers.close();
         } catch (IOException ie) {
             ie.printStackTrace();
         } catch (NullPointerException ne) { 
@@ -38,7 +37,10 @@ class AssignmentThree {
             ne.printStackTrace();
         }
         
-        System.out.println(wordsByNumbers.toString());    
+        System.out.println(wordsByNumbers.toString());   
+        for (int i = 0; i < words.size(); i++) {
+            System.out.println( words.get(i) ); 
+        }
     }
     
     public String matchWordToNumbers( String word ) {
