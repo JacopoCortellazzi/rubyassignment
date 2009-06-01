@@ -35,15 +35,8 @@ class AssignmentThree {
             System.out.println("Krasch! ");
             ne.printStackTrace();
         }
-        
+        //Skiver ut hashMappen
         System.out.println(wordsByNumbers.toString());   
-        for (int i = 0; i < words.size(); i++) {
-            System.out.println( words.get(i) ); 
-        }
-        System.out.println();
-        for (int i = 0; i < numbers.size(); i++) {
-            System.out.println( numbers.get(i) );
-        }
     }
     
     public String matchWordToNumbers( String word ) {
@@ -55,14 +48,20 @@ class AssignmentThree {
                     tmp += Integer.toString(y);
             }
         }
-        //System.out.println(tmp);
         return tmp;   
+    }
+    
+    public void encodeNumber( String num ) {
+        
+        for ( String n : wordsByNumbers.keySet() ) {
+            if( num.equals(wordsByNumbers.get(n)) )
+                System.out.println(num+" : "+n);
+        }
     }
 
     public static void main( String[] args ) {
         AssignmentThree app = new AssignmentThree();
         System.out.println();
-        //System.out.println(app.matchWordToNumbers("jemand"));
+        app.encodeNumber("51");
     }
-
 }
