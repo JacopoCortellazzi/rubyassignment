@@ -3,71 +3,61 @@ import java.util.*;
 import java.lang.*;
 
 class AssignmentThree {
-    private FileReader phonenumberReader, wordReader;
-    private BufferedReader in = null;
     private ArrayList<String> words = new ArrayList<String>();
     private ArrayList<String> numbers = new ArrayList<String>();
-    private Hashtable<String, char[]> mapping = 
-                            new Hashtable<String, char[]>();
-    //private Hashtable numbers = new Hashtable();
-
+    private HashMap<String, String> wordsByNumbers = new HashMap<String, String>();
+    private HashMap<String, char[]> mapping = new HashMap<String, char[]>();
+    private String[] combinations = {"e","jnq","rwx","dsy","ft","am","civ",
+                                                            "bku","lop","ghz"};
     public AssignmentThree () {
-        char[] zero = {'e'};
-        mapping.put("0", zero);
-        char[] one = {'j','n','q'};
-        mapping.put("1", one);
-        char[] two = {'r','w','x'};
-        mapping.put("2", two);
-        char[] three = {'t','s','y'};
-        mapping.put("3", three);
-        char[] four = {'f','t'};
-        mapping.put("4", four);
-        char[] five = {'a','m'};
-        mapping.put("5", five);
-        char[] six = {'c','i','v'};
-        mapping.put("6", six);
-        char[] seven = {'b','k','u'};
-        mapping.put("7", seven);
-        char[] eight = {'l','o','p'};
-        mapping.put("8", eight);
-        char[] nine = {'g','h','z'};
-        mapping.put("9", nine);        
-        try {
-            phonenumberReader = new FileReader( "../doc/phonenumbers.txt" );
-            wordReader = new FileReader( "../doc/dictionary.txt" );
-            //in = new BufferedReader(wordReader);
-            } catch ( FileNotFoundException e ) {
-                System.out.println( "File not found "+e );
-            }
         readFromFiles();
     }
     
     public void readFromFiles() {
         try {
-            in = new BufferedReader( wordReader );
-            while ( in.ready() ) {
-                words.add( in.readLine() );
+            BufferedReader brWords = new BufferedReader( new FileReader(
+                                                    "../doc/dictionary.txt") );
+            while ( brWords.readLine() != "" ) {
+                String line = brWords.readLine();//.toLowerCase();
+                System.out.println(line);
+                //words.add( line );
+                //wordsByNumbers.put(tmp, (matchWordToNumbers( tmp )));
             }
-        } catch (Exception e) {}
-        
-        try {
-            in = new BufferedReader( phonenumberReader );
-            while ( in.ready() ) {
-                numbers.add( in.readLine() );
+            BufferedReader brNumbers = new BufferedReader( new FileReader(
+                                                "../doc/phonenumbers.txt") );
+            while ( brNumbers.readLine() != null ) {
+                numbers.add( brNumbers.readLine() );
+                System.out.println(brNumbers.readLine());
             }
-        } catch (IOException ie) {}
+            brWords.close();
+            brNumbers.close();
+        } catch (IOException ie) {
+            ie.printStackTrace();
+        } catch (NullPointerException ne) { 
+            System.out.println("Krasch! ");
+            ne.printStackTrace();
+        }
         
-        for (int i = 0; i < words.size(); i++) {
-            System.out.println( words.get(i) );
+        System.out.println(wordsByNumbers.toString());    
+    }
+    
+    public String matchWordToNumbers( String word ) {
+        String tmp = "";
+        for( int i = 0; i < word.length(); i++ ) {
+            for( int y = 0; y < combinations.length ; y++ ) {
+                if( combinations[y].contains( 
+                                    String.valueOf(word.charAt(i)) ) )
+                    tmp += Integer.toString(y);
+            }
         }
-        System.out.println();
-        for (int i = 0; i < numbers.size(); i++) {
-            System.out.println( numbers.get(i) );
-        }
+        //System.out.println(tmp);
+        return tmp;   
     }
 
     public static void main( String[] args ) {
         AssignmentThree app = new AssignmentThree();
+        System.out.println();
+        //System.out.println(app.matchWordToNumbers("jemand"));
     }
 
 }
