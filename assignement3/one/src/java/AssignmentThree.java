@@ -17,20 +17,20 @@ class AssignmentThree {
         try {
             BufferedReader brWords = new BufferedReader( new FileReader(
                                                     "../doc/dictionary.txt") );
-            while ( brWords.readLine() != "" ) {
+            while ( brWords.ready() ) {
                 String line = brWords.readLine();//.toLowerCase();
-                System.out.println(line);
-                //words.add( line );
-                //wordsByNumbers.put(tmp, (matchWordToNumbers( tmp )));
+                //System.out.println(line);
+                words.add( line );
+                wordsByNumbers.put(tmp, (matchWordToNumbers( tmp )));
             }
-            BufferedReader brNumbers = new BufferedReader( new FileReader(
-                                                "../doc/phonenumbers.txt") );
-            while ( brNumbers.readLine() != null ) {
-                numbers.add( brNumbers.readLine() );
-                System.out.println(brNumbers.readLine());
-            }
+            //BufferedReader brNumbers = new BufferedReader( new FileReader(
+            //                                    "../doc/phonenumbers.txt") );
+            //while ( brNumbers.readLine() != null ) {
+            //    numbers.add( brNumbers.readLine() );
+            //    System.out.println(brNumbers.readLine());
+            //}
             brWords.close();
-            brNumbers.close();
+            //brNumbers.close();
         } catch (IOException ie) {
             ie.printStackTrace();
         } catch (NullPointerException ne) { 
