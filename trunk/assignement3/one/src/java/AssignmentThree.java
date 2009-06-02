@@ -58,17 +58,24 @@ class AssignmentThree {
     
     
     public void startEncoding( String num ) {
-        matches = "";
-        tmp_matches = "";
+        //matches = "";
+        //tmp_matches = "";
+        StringBuffer phonenumber = new StringBuffer();
+        phonenumber = phonenumber.append(num);
+        System.out.println(phonenumber);
+            
+        
         encodeNumber( num );
         printResult( num, tmp_matches );
     }
     
     public void encodeNumber( String num ) {
-        String tmp_substring;
-        String tmp = num;
+        //String tmp_substring;
+        //String tmp = num;
         int x;
-        //foreach key in wordsByNumbers
+        
+
+        /***********************************************
         for ( String n : wordsByNumbers.keySet() ) {
             x=1;
             while ( x <= ( tmp.length() ) ) {
@@ -84,6 +91,7 @@ class AssignmentThree {
                 }
             }
         }
+        ************************************************/
     }
     
     public void printResult( String num, String result ) {
