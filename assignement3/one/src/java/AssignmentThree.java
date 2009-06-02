@@ -7,6 +7,8 @@ class AssignmentThree {
     private String phonenumbers = "../doc/phonenumbers.txt";
     private ArrayList< String > words = new ArrayList< String >();
     private ArrayList< String > numbers = new ArrayList< String >();
+    private String matches = "";
+    private String tmp_matches = "";
     private HashMap< String, String > wordsByNumbers = 
                                                 new HashMap< String, String >();
     private String[] combinations = { "e","jnq","rwx","dsy","ft","am","civ",
@@ -53,17 +55,44 @@ class AssignmentThree {
         return tmp;   
     }
     
+    
+    
+    public void startEncoding( String num ) {
+        matches = "";
+        tmp_matches = "";
+        encodeNumber( num );
+        printResult( num, tmp_matches );
+    }
+    
     public void encodeNumber( String num ) {
+        String tmp_substring;
+        String tmp = num;
+        int x;
         //foreach key in wordsByNumbers
         for ( String n : wordsByNumbers.keySet() ) {
-            if( num.equals( wordsByNumbers.get( n ) ) )
-                System.out.println( num+" : "+n );
+            x=1;
+            while ( x <= ( tmp.length() ) ) {
+                tmp_substring = tmp.substring( 0, x++ );
+                if( tmp_substring.equals( wordsByNumbers.get( n ) ) ) {
+                    tmp = tmp.replaceFirst(tmp_substring, "");
+                    if( tmp.length() == 0 ) {
+                        matches = tmp_matches;
+                    }
+                    else
+                        encodeNumber( tmp );
+                    tmp_matches += n+" ";
+                }
+            }
         }
+    }
+    
+    public void printResult( String num, String result ) {
+        System.out.println(num+": "+result);
     }
 
     public static void main( String[] args ) {
         AssignmentThree app = new AssignmentThree();
         System.out.println();
-        app.encodeNumber( "51" );
+        app.startEncoding( "253302" );
     }
 }
