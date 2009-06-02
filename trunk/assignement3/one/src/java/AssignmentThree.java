@@ -5,10 +5,10 @@ import java.lang.*;
 class AssignmentThree {
     private String dictionary = "../doc/dictionary.txt";
     private String phonenumbers = "../doc/phonenumbers.txt";
-    private ArrayList<String> words = new ArrayList<String>();
-    private ArrayList<String> numbers = new ArrayList<String>();
-    private HashMap<String, String> wordsByNumbers = 
-                                                 new HashMap<String, String>();
+    private ArrayList< String > words = new ArrayList< String >();
+    private ArrayList< String > numbers = new ArrayList< String >();
+    private HashMap< String, String > wordsByNumbers = 
+                                                new HashMap< String, String >();
     private String[] combinations = { "e","jnq","rwx","dsy","ft","am","civ",
                                                             "bku","lop","ghz" };
     public AssignmentThree () {
@@ -22,7 +22,7 @@ class AssignmentThree {
             while ( brWords.ready() ) {
                 String line = brWords.readLine().toLowerCase();
                 words.add( line );
-                wordsByNumbers.put(line, (matchWordToNumbers( line )));
+                wordsByNumbers.put( line, ( matchWordToNumbers( line ) ) );
             }
             BufferedReader brNumbers = new BufferedReader( new FileReader
                                                              ( phonenumbers ) );
@@ -45,7 +45,7 @@ class AssignmentThree {
         String tmp = "";
         for( int i = 0; i < word.length(); i++ ) {
             for( int y = 0; y < combinations.length ; y++ ) {
-                if( combinations[y].contains( String.valueOf
+                if( combinations[ y ].contains( String.valueOf
                                                         ( word.charAt( i ) ) ) )
                     tmp += Integer.toString( y );
             }
