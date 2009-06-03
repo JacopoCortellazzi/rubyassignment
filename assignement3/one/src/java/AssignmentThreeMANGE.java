@@ -68,9 +68,10 @@ class AssignmentThreeMANGE {
     
     public void startEncoding( String num ) {
         String tmp = encodeNumber( num, 0 );
-        String[] tmp_arr = tmp.split("  ");
+        String[] tmp_arr = tmp.split(" ");
         for( int i = 0; i < tmp_arr.length; i++ ) {
             tmp_arr[i].trim();
+            System.out.println(tmp_arr[i]);
             if( countString(tmp_arr[i]) == num.length() ){
                 System.out.println(num+" : "+tmp_arr[i]);
             }
