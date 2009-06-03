@@ -3,10 +3,14 @@ import java.lang.*;
 import java.util.*;
 
 class MyMatch{
+	boolean numeric = false;
 	private String str = null;
 	private String str2 = null;
+	private String numberToSave;
+	private String wordAsText = "";
 	private ArrayList<String> words = new ArrayList<String>();
 	private ArrayList<String> numbers = new ArrayList<String>();
+	private	ArrayList<String> wordsToCheck = new ArrayList<String>();
 	private HashMap<String, String> numberRepresentation = new HashMap<String, String>(); 
 	private static final String[] combos = {"e","jnq", "rwx", "dsy", "ft", 
 		"am", "civ", "bku", "lop", "ghz"};
@@ -39,10 +43,10 @@ class MyMatch{
 		catch(IOException e){
 			System.out.println(e);
 		}
-		
+
 		System.out.println(numberRepresentation.keySet());
-		
-		
+
+
 		for(int i = 0; i < numbers.size(); i++){
 			checkNumber(numbers.get(i).trim());
 		}
@@ -63,30 +67,30 @@ class MyMatch{
 	public void checkNumber(String number){
 		ArrayList<String> tmpWords = new ArrayList<String>();
 		ArrayList<String> tmpWords2 = new ArrayList<String>();
-		ArrayList<String> wordsToCheck = new ArrayList<String>();
+
 		HashMap<String, String> tmpHash = new HashMap<String, String>(); 
-		String numberToSave = number;
 		String secondNumber = number;
 		matchingWords.clear();
 		String tmp = "";
 		String newNumber = "";
 		int count = 0;
-		
+		numberToSave = number; 
+
 		while(!number.equals("")){
 			for(String s : numberRepresentation.keySet()){
-				
+
 				number.trim();
 				if(number.startsWith(numberRepresentation.get(s))){
-					
-						for(String s2 : numberRepresentation.keySet()){
-							if(number.startsWith(numberRepresentation.get(s2))){
-								if(s2.length() == numberToSave.length() && !tmpWords2.contains(s2))
-									tmpWords2.add(s2);
-								if(s2.length() < numberToSave.length()){
-									wordsToCheck.add(s2);									
-								}
+
+					for(String s2 : numberRepresentation.keySet()){
+						if(number.startsWith(numberRepresentation.get(s2))){
+							if(s2.length() == numberToSave.length() && !tmpWords2.contains(s2))
+								tmpWords2.add(s2);
+							if(s2.length() < numberToSave.length() && !wordsToCheck.contains(s2)){
+								wordsToCheck.add(s2);									
 							}
-						}					
+						}
+					}					
 					tmp = numberRepresentation.get(s);
 					int len = (tmp.length())-1;
 					Character x = tmp.charAt(len);
@@ -97,7 +101,7 @@ class MyMatch{
 						newNumber = "";
 						int l = number.length()-len;						
 						for(int ii = 1 ; ii<l; ii++){
-							
+
 							Character newCharacter = number.charAt(inde+ii);							
 							newNumber += newCharacter.toString();
 						}						
@@ -111,8 +115,35 @@ class MyMatch{
 			if(count == numberRepresentation.size())
 				number = "";
 		}
+		matchingWords = tmpWords2;
+		
+		for(int g = 0; g < wordsToCheck.size(); g++){
+			numeric = false;
+			checkWords(wordsToCheck.get(g));
+		}
 
-		//CHECKWORDS
+		printMatches(numberToSave);
+	}
+
+
+	
+	public void checkWords(String word){
+		String partOfWord = "";
+		String s5 = "";
+		String space = " ";
+		if(!numeric){
+			wordAsText += word;
+			for(int o = 0; o < word.length(); o++){
+				numeric = true;
+				for(int t = 0; t < combos.length; t++){
+					if(combos[t].contains(String.valueOf(word.charAt(o)))){
+						s5 += t;						
+					}
+				}
+			}
+		}
+		else
+			s5 = word;
 		for(int i = 0; i < wordsToCheck.size(); i++){	
 			String s3 = "";
 			for(int z = 0; z < wordsToCheck.get(i).length(); z++){
@@ -122,39 +153,33 @@ class MyMatch{
 					}
 				}
 			}
-			for(int y = 0; y < wordsToCheck.size(); y++){
-				String s4 = "";
-				for(int zz = 0; zz < wordsToCheck.get(y).length(); zz++){
-					for(int ii = 0; ii < combos.length; ii++){
-						if(combos[ii].contains(String.valueOf(wordsToCheck.get(y).charAt(zz)))){
-							s4 += ii;
-						}
-					}
+			if(numberToSave.startsWith(s5.concat(s3))){
+				wordAsText += space += wordsToCheck.get(i);
+				
+				if(s5.concat(s3).length() == 5){
+					System.out.println("Whole: "+s5.concat(s3));
+					matchingWords.add(wordAsText);
+					
 				}
-				System.out.println(s3+" - "+s4+" Number: "+numberToSave);											
-				if(s3.concat(s4).equals(numberToSave)){					
-					String strToAdd = wordsToCheck.get(i).concat("-").concat(wordsToCheck.get(y));
-					tmpWords2.add(strToAdd);
+				else{
+					partOfWord = s5.concat(s3);
+					checkWords(partOfWord);
 				}
-			} 
-		}
-		
-		matchingWords = tmpWords2;
-		printMatches(numberToSave);
-	}
-
-
-	public void printMatches(String number){
-		System.out.print(number+": ");
-		if(matchingWords.size() > 0){
-			for(int i = 0; i < matchingWords.size(); i++){
-				System.out.print(matchingWords.get(i)+" ");
 			}
 		}
-		System.out.println();		
 	}
 
-	public static void main(String[] args){
-		MyMatch m = new MyMatch();
+public void printMatches(String number){
+	System.out.print(number+": ");
+	if(matchingWords.size() > 0){
+		for(int i = 0; i < matchingWords.size(); i++){
+			System.out.print(matchingWords.get(i)+" ");
+		}
 	}
+	System.out.println();		
+}
+
+public static void main(String[] args){
+	MyMatch m = new MyMatch();
+}
 }
