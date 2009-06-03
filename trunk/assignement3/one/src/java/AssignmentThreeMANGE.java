@@ -73,11 +73,12 @@ class AssignmentThreeMANGE {
                 if( substring.equals( wordsByNumbers.get( n ) ) ) {
                     System.out.println(substring+" : "+n);
                     xxx += n+" ";
+                    System.out.println(xxx+" Mir eller mix?");
                     restOfNum = num.replaceFirst( substring, "" );
                     System.out.println("Rest of string: "+restOfNum);
                     if( restOfNum.length() == 0 ) {
                         System.out.println("Match: "+n);
-                        //xxx += n+" ";
+                        //System.out.println(xxx+"<---xxx n--->"+n);
                     }
                     else {
                         System.out.println(encodeNumber( restOfNum, 0 ));
@@ -86,7 +87,6 @@ class AssignmentThreeMANGE {
                 }
             }
         }
-        //System.out.println("tmp_matches = "+tmp_matches);
         return xxx;
     }
     
