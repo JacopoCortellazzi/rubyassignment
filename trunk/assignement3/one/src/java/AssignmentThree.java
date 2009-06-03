@@ -7,7 +7,7 @@ class AssignmentThree {
     private String phonenumbers = "../doc/phonenumbers.txt";
     private ArrayList< String > words = new ArrayList< String >();
     private ArrayList< String > numbers = new ArrayList< String >();
-    private String matches = "";
+    private ArrayList< String > matches = new ArrayList< String >();
     private String tmp_matches = "";
     private StringBuffer phonenumber = new StringBuffer();
     private HashMap< String, String > wordsByNumbers = 
@@ -56,6 +56,7 @@ class AssignmentThree {
         return tmp;   
     }
     
+
     
     
     public void startEncoding( String num ) {
@@ -70,7 +71,7 @@ class AssignmentThree {
             phonenumber = phonenumber.insert( phonenumber.length(), 
                                                           partOfString[ x++ ] );
         
-        for ( String n : wordsByNumbers.keySet() ) {
+        for ( String n : wordsByNumbers.keySet() ) {//loopar igenom alla keys där keyn är n
             System.out.println(n+": "+phonenumber);
                 
             
@@ -96,22 +97,23 @@ class AssignmentThree {
         /***********************************************
         for ( String n : wordsByNumbers.keySet() ) {
             x=1;
-            while ( x <= ( tmp.length() ) ) {
+            while ( x <= ( tmp.length() ) ) {//while loopen lägger till en bokstav om det ine finns nån match för nuvarande nummret
                 tmp_substring = tmp.substring( 0, x++ );
-                if( tmp_substring.equals( wordsByNumbers.get( n ) ) ) {
-                    tmp = tmp.replaceFirst(tmp_substring, "");
-                    if( tmp.length() == 0 ) {
-                        matches = tmp_matches;
+                if( tmp_substring.equals( wordsByNumbers.get( n ) ) ) {//om den nya substringen matchar nycklens value
+                    tmp = tmp.replaceFirst(tmp_substring, "");//ersätter den matchade strängen med inget
+                    if( tmp.length() == 0 ){//om tmp inte innehåller fler bokstäver
+                      tmp_matches += n;
+                      printResult(num, tmp_matches);
+                    }else{//annars om inte tmp är tom
+                    tmp_matches += n+" ";//läggs n in i tmp_matches och x sätts till 1
+                    x = 1;
                     }
-                    else
-                        encodeNumber( tmp );
-                    tmp_matches += n+" ";
                 }
             }
         }
         ************************************************/
     }
-    
+   
     public void printResult( String num, String result ) {
         System.out.println(num+": "+result);
     }
