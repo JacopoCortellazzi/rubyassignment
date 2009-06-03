@@ -56,30 +56,22 @@ class AssignmentThree {
         return tmp;   
     }
     
-    
-    
     public void startEncoding( String num ) {
-        System.out.println( num+" : "+encodeNumber( num, 0 ) );
+
+        String substring = " ";
+        int count = num.length();
+        while( count > 0 ) {
+            substring = num.substring( 0, count-- );
+            encodeNumber(substring, 0);
+        }
     }
     
     public String encodeNumber( String num, int x  ) {
         int length = num.length();
-        String substring = "";
-        String restOfNum = "";
-        while ( x < length ) {
-            substring = num.substring( 0, ++x );
-            for ( String n : wordsByNumbers.keySet() ) {
-                System.out.println("x = "+x+" key: "+n);
-                
-                if( substring.equals( wordsByNumbers.get( n ) ) ) {
-                    System.out.println(substring+" : "+n);
-                    restOfNum = num.replaceFirst( substring, "" );
-                    System.out.println("Rest of string: "+restOfNum);
-                    if( restOfNum.length() == 0 )
-                        return n;
-                    else
-                        return encodeNumber( restOfNum, 0 );
-                }
+            
+        for ( String n : wordsByNumbers.keySet() ) {
+            if( num.equals( wordsByNumbers.get( n ) ) ) {
+                return n;
             }
         }
         return "No match";
