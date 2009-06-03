@@ -59,57 +59,30 @@ class AssignmentThree {
     
     
     public void startEncoding( String num ) {
-        char[] partOfString = num.toCharArray();
-        System.out.println( num+" : "+encodeNumber( partOfString, 0 ) );
+        System.out.println( num+" : "+encodeNumber( num, 0 ) );
     }
     
-    public String encodeNumber( char[] partOfString, int x  ) {
-        int length = partOfString.length;
-        
-        if( x < (partOfString.length) )
-            phonenumber = phonenumber.insert( phonenumber.length(), 
-                                                          partOfString[ x++ ] );
-        
-        for ( String n : wordsByNumbers.keySet() ) {
-            System.out.println(n+": "+phonenumber);
+    public String encodeNumber( String num, int x  ) {
+        int length = num.length();
+        String substring = "";
+        String restOfNum = "";
+        while ( x < length ) {
+            substring = num.substring( 0, ++x );
+            for ( String n : wordsByNumbers.keySet() ) {
+                System.out.println("x = "+x+" key: "+n);
                 
-            
-            if( phonenumber.toString().equals( wordsByNumbers.get( n ) ) ) {
-                tmp_matches += n+" ";
-                System.out.println("--------->Match!<-------->"+n);
-                //TODO måste rekursivt anropa med resterande siffror...
-                char[] tmptmp = {'4','8','2'};
-                return encodeNumber( tmptmp, x );
-                //phonenumber = phonenumber.delete(0, x);
-                //System.out.println( tmp_matches );
-                //return encodeNumber( phonenumber.toString().toCharArray(), x );
-            }
-        
-        }
-        if( x >= partOfString.length )
-            return tmp_matches;
-        else
-            return encodeNumber( partOfString, x );
-        
-        
-        
-        /***********************************************
-        for ( String n : wordsByNumbers.keySet() ) {
-            x=1;
-            while ( x <= ( tmp.length() ) ) {
-                tmp_substring = tmp.substring( 0, x++ );
-                if( tmp_substring.equals( wordsByNumbers.get( n ) ) ) {
-                    tmp = tmp.replaceFirst(tmp_substring, "");
-                    if( tmp.length() == 0 ) {
-                        matches = tmp_matches;
-                    }
+                if( substring.equals( wordsByNumbers.get( n ) ) ) {
+                    System.out.println(substring+" : "+n);
+                    restOfNum = num.replaceFirst( substring, "" );
+                    System.out.println("Rest of string: "+restOfNum);
+                    if( restOfNum.length() == 0 )
+                        return n;
                     else
-                        encodeNumber( tmp );
-                    tmp_matches += n+" ";
+                        return encodeNumber( restOfNum, 0 );
                 }
             }
         }
-        ************************************************/
+        return "No match";
     }
     
     public void printResult( String num, String result ) {
