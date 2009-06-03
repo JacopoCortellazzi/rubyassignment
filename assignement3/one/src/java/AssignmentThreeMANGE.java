@@ -57,7 +57,14 @@ class AssignmentThreeMANGE {
     }
     
     public void startEncoding( String num ) {
-        System.out.println( num+" : "+encodeNumber( num, 0 ) );
+        String tmp = encodeNumber( num, 0 );
+        String[] tmp_arr = tmp.split("  ");
+        for( int i = 0; i < tmp_arr.length; i++ ) {
+            //tmp_arr[i].strip();
+            if( tmp_arr[i].length() == (num.length()+1) ){
+                System.out.println(num+" : "+tmp_arr[i]);
+            }
+        }
     }
     
     public String encodeNumber( String num, int x  ) {
@@ -73,12 +80,10 @@ class AssignmentThreeMANGE {
                 if( substring.equals( wordsByNumbers.get( n ) ) ) {
                     System.out.println(substring+" : "+n);
                     xxx += n+" ";
-                    System.out.println(xxx+" Mir eller mix?");
                     restOfNum = num.replaceFirst( substring, "" );
                     System.out.println("Rest of string: "+restOfNum);
                     if( restOfNum.length() == 0 ) {
                         System.out.println("Match: "+n);
-                        //System.out.println(xxx+"<---xxx n--->"+n);
                     }
                     else {
                         System.out.println(encodeNumber( restOfNum, 0 ));
