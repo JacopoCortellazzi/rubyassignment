@@ -56,12 +56,22 @@ class AssignmentThreeMANGE {
         return tmp;   
     }
     
+    public int countString( String s ) {
+        String good = "abcdefghijklmnopqrstuvwxyzåäö";
+        int count = 0;
+        for( int i = 0; i < s.length(); i++ ) {
+            if( good.indexOf( s.charAt( i ) ) >= 0 )
+                count++;
+        }
+        return count;
+    }
+    
     public void startEncoding( String num ) {
         String tmp = encodeNumber( num, 0 );
         String[] tmp_arr = tmp.split("  ");
         for( int i = 0; i < tmp_arr.length; i++ ) {
-            //tmp_arr[i].strip();
-            if( tmp_arr[i].length() == (num.length()+1) ){
+            tmp_arr[i].trim();
+            if( countString(tmp_arr[i]) == num.length() ){
                 System.out.println(num+" : "+tmp_arr[i]);
             }
         }
