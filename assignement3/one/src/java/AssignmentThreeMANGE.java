@@ -73,7 +73,7 @@ class AssignmentThreeMANGE {
             tmp_arr[i].trim();
             System.out.println(tmp_arr[i]);
             if( countString(tmp_arr[i]) == num.length() ){
-                System.out.println(num+" : "+tmp_arr[i]);
+                //System.out.println(num+" : "+tmp_arr[i]);
             }
         }
     }
