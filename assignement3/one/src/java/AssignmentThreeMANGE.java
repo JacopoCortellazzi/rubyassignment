@@ -62,6 +62,7 @@ class AssignmentThreeMANGE {
     
     public String encodeNumber( String num, int x  ) {
         int length = num.length();
+        String xxx = "";
         String substring = "";
         String restOfNum = "";
         while ( x < length ) {
@@ -71,16 +72,22 @@ class AssignmentThreeMANGE {
                 
                 if( substring.equals( wordsByNumbers.get( n ) ) ) {
                     System.out.println(substring+" : "+n);
+                    xxx += n+" ";
                     restOfNum = num.replaceFirst( substring, "" );
                     System.out.println("Rest of string: "+restOfNum);
-                    if( restOfNum.length() == 0 )
+                    if( restOfNum.length() == 0 ) {
                         System.out.println("Match: "+n);
-                    else
+                        //xxx += n+" ";
+                    }
+                    else {
                         System.out.println(encodeNumber( restOfNum, 0 ));
+                        xxx += (encodeNumber( restOfNum, 0 )+" ");
+                    }
                 }
             }
         }
-        return "";
+        //System.out.println("tmp_matches = "+tmp_matches);
+        return xxx;
     }
     
     public void printResult( String num, String result ) {
