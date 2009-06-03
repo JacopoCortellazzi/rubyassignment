@@ -116,7 +116,7 @@ class MyMatch{
 				number = "";
 		}
 		matchingWords = tmpWords2;
-		
+
 		for(int g = 0; g < wordsToCheck.size(); g++){
 			numeric = false;
 			checkWords(wordsToCheck.get(g));
@@ -126,7 +126,7 @@ class MyMatch{
 	}
 
 
-	
+
 	public void checkWords(String word){
 		String partOfWord = "";
 		String s5 = "";
@@ -155,11 +155,11 @@ class MyMatch{
 			}
 			if(numberToSave.startsWith(s5.concat(s3))){
 				wordAsText += space += wordsToCheck.get(i);
-				
+
 				if(s5.concat(s3).length() == 5){
 					System.out.println("Whole: "+s5.concat(s3));
 					matchingWords.add(wordAsText);
-					
+
 				}
 				else{
 					partOfWord = s5.concat(s3);
@@ -169,17 +169,17 @@ class MyMatch{
 		}
 	}
 
-public void printMatches(String number){
-	System.out.print(number+": ");
-	if(matchingWords.size() > 0){
-		for(int i = 0; i < matchingWords.size(); i++){
-			System.out.print(matchingWords.get(i)+" ");
+	public void printMatches(String number){
+		System.out.print(number+": ");
+		if(matchingWords.size() > 0){
+			for(int i = 0; i < matchingWords.size(); i++){
+				System.out.print(matchingWords.get(i)+" ");
+			}
 		}
+		System.out.println();		
 	}
-	System.out.println();		
-}
 
-public static void main(String[] args){
-	MyMatch m = new MyMatch();
-}
+	public static void main(String[] args){
+		MyMatch m = new MyMatch();
+	}
 }
