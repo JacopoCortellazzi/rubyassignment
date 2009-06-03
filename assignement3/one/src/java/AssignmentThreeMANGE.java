@@ -14,6 +14,7 @@ class AssignmentThreeMANGE {
                                                 new HashMap< String, String >();
     private String[] combinations = { "e","jnq","rwx","dsy","ft","am","civ",
                                                             "bku","lop","ghz" };
+                                                            
     public AssignmentThreeMANGE () {
         readFromFiles();
     }
@@ -56,54 +57,45 @@ class AssignmentThreeMANGE {
         return tmp;   
     }
     
-    public int countString( String s ) {
-        String good = "abcdefghijklmnopqrstuvwxyzåäö";
-        int count = 0;
-        for( int i = 0; i < s.length(); i++ ) {
-            if( good.indexOf( s.charAt( i ) ) >= 0 )
-                count++;
-        }
-        return count;
-    }
-    
     public void startEncoding( String num ) {
+        tmp_matches = "";
         String tmp = encodeNumber( num, 0 );
-        String[] tmp_arr = tmp.split(" ");
-        for( int i = 0; i < tmp_arr.length; i++ ) {
-            tmp_arr[i].trim();
-            System.out.println(tmp_arr[i]);
-            if( countString(tmp_arr[i]) == num.length() ){
-                //System.out.println(num+" : "+tmp_arr[i]);
-            }
-        }
+        System.out.println("Result: "+tmp);
     }
     
     public String encodeNumber( String num, int x  ) {
         int length = num.length();
-        String xxx = "";
         String substring = "";
         String restOfNum = "";
-        while ( x < length ) {
+        
+        for ( String n : wordsByNumbers.keySet() ){
+        
+            if( num.equals( wordsByNumbers.get( n ) ) ) {
+                return n;
+            }
+        }
+        
+        //GÖR INTE SOM DEN SKA//
+        /*while ( x < length ) {
             substring = num.substring( 0, ++x );
             for ( String n : wordsByNumbers.keySet() ) {
-                System.out.println("x = "+x+" key: "+n);
-                
+                System.out.println("Substring: "+substring);
                 if( substring.equals( wordsByNumbers.get( n ) ) ) {
-                    System.out.println(substring+" : "+n);
-                    xxx += n+" ";
+                    System.out.println("Match = "+substring+" : "+n);
                     restOfNum = num.replaceFirst( substring, "" );
-                    System.out.println("Rest of string: "+restOfNum);
-                    if( restOfNum.length() == 0 ) {
-                        System.out.println("Match: "+n);
+                    System.out.println("New encodeNumber("+restOfNum+")");
+                    if( restOfNum.length() != 0 ){
+                        return encodeNumber( restOfNum, 0 );
                     }
-                    else {
-                        System.out.println(encodeNumber( restOfNum, 0 ));
-                        xxx += (encodeNumber( restOfNum, 0 )+" ");
-                    }
+                    else
+                        return n;
+                        //tmp_matches += n+" ";
                 }
             }
         }
-        return xxx;
+        */
+        return "";
+       
     }
     
     public void printResult( String num, String result ) {
@@ -113,6 +105,7 @@ class AssignmentThreeMANGE {
     public static void main( String[] args ) {
         AssignmentThreeMANGE app = new AssignmentThreeMANGE();
         System.out.println();
-        app.startEncoding( "562482" );
+        app.startEncoding( "4824" );
+        //562482
     }
 }
