@@ -7,7 +7,7 @@ class AssignmentThree {
     private String phonenumbers = "../doc/phonenumbers.txt";
     private ArrayList< String > words = new ArrayList< String >();
     private ArrayList< String > numbers = new ArrayList< String >();
-    private ArrayList< String > matches = new ArrayList< String >();
+    private String matches = "";
     private String tmp_matches = "";
     private StringBuffer phonenumber = new StringBuffer();
     private HashMap< String, String > wordsByNumbers = 
@@ -56,71 +56,44 @@ class AssignmentThree {
         return tmp;   
     }
     
-
-    
-    
-    public void startEncoding( String num ) {
-        char[] partOfString = num.toCharArray();
-        System.out.println( num+" : "+encodeNumber( partOfString, 0 ) );
+    public int countString( String s ) {
+        String good = "abcdefghijklmnopqrstuvwxyzåäö";
+        int count = 0;
+        for( int i = 0; i < s.length(); i++ ) {
+            if( good.indexOf( s.charAt( i ) ) >= 0 )
+                count++;
+        }
+        return count;
     }
     
-    public String encodeNumber( char[] partOfString, int x  ) {
-        int length = partOfString.length;
-        
-        if( x < (partOfString.length) )
-            phonenumber = phonenumber.insert( phonenumber.length(), 
-                                                          partOfString[ x++ ] );
-        
-        for ( String n : wordsByNumbers.keySet() ) {//loopar igenom alla keys där keyn är n
-            System.out.println(n+": "+phonenumber);
-                
-            
-            if( phonenumber.toString().equals( wordsByNumbers.get( n ) ) ) {
-                tmp_matches += n+" ";
-                System.out.println("--------->Match!<-------->"+n);
-                //TODO måste rekursivt anropa med resterande siffror...
-                char[] tmptmp = {'4','8','2'};
-                return encodeNumber( tmptmp, x );
-                //phonenumber = phonenumber.delete(0, x);
-                //System.out.println( tmp_matches );
-                //return encodeNumber( phonenumber.toString().toCharArray(), x );
-            }
-        
+    public void startEncoding( String num ) {
+        encodeNumber( num, "" , 0 );
+    }
+    
+    public void encodeNumber( String num, String result , int x  ) {
+        if ( num.length() == 0 ){
+            System.out.println( result );
         }
-        if( x >= partOfString.length )
-            return tmp_matches;
-        else
-            return encodeNumber( partOfString, x );
-        
-        
-        
-        /***********************************************
-        for ( String n : wordsByNumbers.keySet() ) {
-            x=1;
-            while ( x <= ( tmp.length() ) ) {//while loopen lägger till en bokstav om det ine finns nån match för nuvarande nummret
-                tmp_substring = tmp.substring( 0, x++ );
-                if( tmp_substring.equals( wordsByNumbers.get( n ) ) ) {//om den nya substringen matchar nycklens value
-                    tmp = tmp.replaceFirst(tmp_substring, "");//ersätter den matchade strängen med inget
-                    if( tmp.length() == 0 ){//om tmp inte innehåller fler bokstäver
-                      tmp_matches += n;
-                      printResult(num, tmp_matches);
-                    }else{//annars om inte tmp är tom
-                    tmp_matches += n+" ";//läggs n in i tmp_matches och x sätts till 1
-                    x = 1;
-                    }
+        int length = num.length();
+        String substring = "";
+        String restOfNum = "";
+        while ( x < length ) {
+            substring = num.substring( 0, ++x );
+            for ( String n : wordsByNumbers.keySet() ) {
+                if( substring.equals( wordsByNumbers.get( n ) ) ) {
+                    result += n+" ";
+                    restOfNum = num.replaceFirst( substring, "" );
+                    encodeNumber( restOfNum, result , 0);
                 }
             }
         }
-        ************************************************/
     }
-   
-    public void printResult( String num, String result ) {
-        System.out.println(num+": "+result);
-    }
-
+    
     public static void main( String[] args ) {
         AssignmentThree app = new AssignmentThree();
         System.out.println();
-        app.startEncoding( "562482" );
+        app.startEncoding( "4824" );
+        //562482
+        //4824
     }
 }
