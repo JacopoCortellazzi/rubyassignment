@@ -3,8 +3,8 @@ import java.util.*;
 import java.lang.*;
 
 class AssignmentThree {
-    private String dictionary = "../doc/dictionary.txt";
-    private String phonenumbers = "../doc/phonenumbers.txt";
+    private String dictionary = "../doc/dict.txt";
+    private String phonenumbers = "../doc/tele.txt";
     private ArrayList<String> numbers = new ArrayList<String>();
     private String originalNum;
     private StringBuffer phonenumber = new StringBuffer();
