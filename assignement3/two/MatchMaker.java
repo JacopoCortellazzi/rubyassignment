@@ -82,17 +82,15 @@ class MatchMaker{
 	}
 
 	public void printMatches(String number){
-		System.out.print(number+": ");
 		if(matchingWords.size() > 0){
 			for(int i = 0; i < matchingWords.size(); i++){
-				System.out.print(matchingWords.get(i)+" ");
+				System.out.print(number+": "+matchingWords.get(i)+"\n");
 			}
 		}
-		System.out.println();		
+		matchingWords.clear();
 	}
 
 	public static void main(String[] args){
 		MatchMaker m = new MatchMaker();
 	}
 }
-
