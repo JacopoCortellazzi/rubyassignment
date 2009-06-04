@@ -67,16 +67,8 @@ class AssignmentThreeMANGE {
         int length = num.length();
         String substring = "";
         String restOfNum = "";
-        
-        for ( String n : wordsByNumbers.keySet() ){
-        
-            if( num.equals( wordsByNumbers.get( n ) ) ) {
-                return n;
-            }
-        }
-        
-        //GÖR INTE SOM DEN SKA//
-        /*while ( x < length ) {
+
+        while ( x < length ) {
             substring = num.substring( 0, ++x );
             for ( String n : wordsByNumbers.keySet() ) {
                 System.out.println("Substring: "+substring);
@@ -85,17 +77,16 @@ class AssignmentThreeMANGE {
                     restOfNum = num.replaceFirst( substring, "" );
                     System.out.println("New encodeNumber("+restOfNum+")");
                     if( restOfNum.length() != 0 ){
-                        return encodeNumber( restOfNum, 0 );
+                        encodeNumber( restOfNum, 0 );
                     }
                     else
-                        return n;
-                        //tmp_matches += n+" ";
+                        //return n;
+                        tmp_matches += n+" ";
                 }
             }
         }
-        */
-        return "";
-       
+        
+        return tmp_matches;
     }
     
     public void printResult( String num, String result ) {
