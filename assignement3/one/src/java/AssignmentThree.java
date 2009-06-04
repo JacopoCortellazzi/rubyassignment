@@ -8,8 +8,8 @@ class AssignmentThree {
     private ArrayList<String> words = new ArrayList<String>();
     private ArrayList<String> numbers = new ArrayList<String>();
     private String originalNum;
-    private String matches = "";
-    private String tmp_matches = "";
+    //private String matches = "";
+    //private String tmp_matches = "";
     private StringBuffer phonenumber = new StringBuffer();
     private HashMap<String, String> wordsByNumbers = 
                                                 new HashMap<String, String>();
