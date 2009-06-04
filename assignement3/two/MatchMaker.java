@@ -2,21 +2,21 @@ import java.io.*;
 import java.lang.*;
 import java.util.*;
 
-class SlinkMatch{
-	private String str = null;
-	private String str2 = null;
+class MatchMaker{
 	private ArrayList<String> words = new ArrayList<String>();
 	private ArrayList<String> numbers = new ArrayList<String>();
 	private HashMap<String, String> numberRepresentation = new HashMap<String, String>(); 
 	private static final String[] combos = {"e","jnq", "rwx", "dsy", "ft", 
 		"am", "civ", "bku", "lop", "ghz"};
-	ArrayList<String> matchingWords = new ArrayList<String>();
+	private ArrayList<String> matchingWords = new ArrayList<String>();
 
-	public SlinkMatch(){
+	public MatchMaker(){
 		readFromFile();
 	}
 
 	public void readFromFile(){
+		String str = "";
+		String str2 = "";
 		try{
 			BufferedReader br = new BufferedReader(new FileReader("newdict.txt"));
 			BufferedReader br2 = new BufferedReader(new FileReader("numbers.txt"));
@@ -24,6 +24,8 @@ class SlinkMatch{
 				words.add(str.toLowerCase());
 				numberRepresentation.put(str.toLowerCase(), wordsToNumbers(str.toLowerCase()));
 			}
+
+
 			while ((str2 = br2.readLine()) != null){
 				try{
 					numbers.add(str2);
@@ -40,19 +42,20 @@ class SlinkMatch{
 			System.out.println(e);
 		}
 
-		System.out.println(numberRepresentation.keySet());
 
 
 		for(int i = 0; i < numbers.size(); i++){
-			translateNumber(numbers.get(i).trim(), words, 1);
+			String number = numbers.get(i).trim();
+			translateNumber(number, "", 0);
+			printMatches(number);
 		}
 	}
 
 	public String wordsToNumbers(String word){
 		String s = "";
-		for(int i = 0; i < str.length(); i++){
+		for(int i = 0; i < word.length(); i++){
 			for(int y = 0; y < combos.length; y++){
-				if(combos[y].contains(String.valueOf(str.charAt(i)))){
+				if(combos[y].contains(String.valueOf(word.charAt(i)))){
 					s += y;
 				}
 			}
@@ -61,40 +64,21 @@ class SlinkMatch{
 	}
 
 
-	// for loop på nummerlängden? 
-	// Specialfall med korta ord; ny loop med rest nummer + full dict
-	//
-
 	public void translateNumber(String number, String translation, int index) {
-		if (index >= no.length()) {
-			//System.err.println("Break!"+dict.toString());
-			System.out.println(translation);
-		} else {
-			for (int i = 0; i < translation.size(); ++i) {
-				String word = translation.get(i);
-				if ((word.length() > index) && (word.length() <= number.length())) {
-					String numString = combos[Integer.parseInt(String.valueOf(number.charAt(index)))];
-					//System.err.println("DEBUG: "+word+", index: "+index);
-					if (numString.contains((new Character(word.charAt(index))).toString())) {
-						mem.add(word);
-						if (word.length() == index+1) {
-							for (String s : translateNumber(number.substring(index+1), words, 1)) {
-								s = word+" "+s;
-								System.err.println("Dubbel! "+s);
-							}
-							return mem;
-						}
-						System.err.println("Add word to "+mem.toString());
-					}
+		if (number.length() == 0) {
+			matchingWords.add(translation);
+		}
+		String firstpart = "";
+		String restpart = "";
+		while (index < number.length()) {
+			firstpart = number.substring(0, ++index);
+			for (String match : numberRepresentation.keySet()) {
+				if (firstpart.equals(numberRepresentation.get(match))) {
+					restpart = number.replaceFirst(firstpart, "");
+					translateNumber(restpart, translation+match+" ", 0);
 				}
 			}
-			index++;
-			System.err.println("Ny vända! index =="+index);
-			//return mem;
-			return translateNumber(number, mem, index);
 		}
-		//System.err.println("END!"+dict.toString()+"iter "+index);
-		//return dict;
 	}
 
 	public void printMatches(String number){
@@ -108,7 +92,7 @@ class SlinkMatch{
 	}
 
 	public static void main(String[] args){
-		SlinkMatch m = new SlinkMatch();
+		MatchMaker m = new MatchMaker();
 	}
 }
 
