@@ -1,2 +1,9 @@
 Java:
-    mån: 5,5h
+        mån: 5,5h
+        tis: 6h
+        ons: 6h
+        tors: 2h
+tot:        19.5h
+
+Ruby:
+        tors: 

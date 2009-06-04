@@ -5,11 +5,8 @@ import java.lang.*;
 class AssignmentThree {
     private String dictionary = "../doc/dictionary.txt";
     private String phonenumbers = "../doc/phonenumbers.txt";
-    private ArrayList<String> words = new ArrayList<String>();
     private ArrayList<String> numbers = new ArrayList<String>();
     private String originalNum;
-    //private String matches = "";
-    //private String tmp_matches = "";
     private StringBuffer phonenumber = new StringBuffer();
     private HashMap<String, String> wordsByNumbers = 
                                                 new HashMap<String, String>();
@@ -29,7 +26,6 @@ class AssignmentThree {
                                                                ( dictionary ) );
             while ( brWords.ready() ) {
                 String line = brWords.readLine().toLowerCase();
-                words.add( line );
                 wordsByNumbers.put( line, ( matchWordToNumbers( line ) ) );
             }
             BufferedReader brNumbers = new BufferedReader( new FileReader
