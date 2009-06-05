@@ -57,21 +57,18 @@ class AssignmentThree {
     
     public void startEncoding( String num ) {
         originalNum = num;
-        encodeNumber( num, "", 0 );
+        encodeNumber( num, "");
     }
     
-    public void encodeNumber( String num, String result, int x  ) {
+    public void encodeNumber( String num, String result ) {
         if ( num.length() == 0 )
             System.out.println( originalNum+": "+result );
-        int length = num.length();
         String substring = "";
-        String restOfNum = "";
-        while ( x < length ) {
-            substring = num.substring( 0, ++x );
+        for (int i = 1 ; i <= num.length(); i++ ) {
+            substring = num.substring( 0, i );
             for ( String n : wordsByNumbers.keySet() ) {
                 if( substring.equals( wordsByNumbers.get( n ) ) ) {
-                    restOfNum = num.replaceFirst( substring, "" );
-                    encodeNumber( restOfNum, result+n+" ", 0 );
+                    encodeNumber( num.replaceFirst( substring, "" ), result+n+" ");
                 }
             }
         }
