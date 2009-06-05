@@ -21,7 +21,7 @@ Java kändes ''Tryggare'' eftersom det är mer traditionellt och på grund av va
 
 Mycket väl dokumenterat API, väldigt lätt att hitta funktioner som är användbara. Samtidigt kan det vara lite överväldigande, eftersom varje typ har en helt ohygglig mängd funktioner för att klara av samma saker Python har inbyygt.
 
-Hantering av typer kändes bökigare än i Python (naturligtvis), med fler konverteringar, exempelvis Integer.parseInt, String.valueOf etc. En version av implementationen hade till exempel följande mindre läsbara rader:\\
+Hantering av typer kändes bökigare än i Python (naturligtvis), med fler konverteringar, exempelvis \verb|Integer.parseInt|, \verb|String.valueOf| etc. En version av implementationen hade till exempel följande mindre läsbara rader:\\
 \begin{verbatim}
 combos[Integer.parseInt(String.valueOf(number.charAt(index)))]
 ...
@@ -66,8 +66,8 @@ public void readFromFile(){
 }
 \end{verbatim}
 
-Å andra sidan är Pythons API väldigt mycket sämre dokumenterat än Javas, google är en större vän än organisationen i den officiella dokumentationen. Delvis uppvägs detta av \verb|dir()| och \verb|help()| men inte fullständigt.
+Å andra sidan är Pythons API väldigt mycket sämre dokumenterat än Javas, google är en större vän än organisationen i den officiella dokumentationen. Delvis uppvägs detta av \verb|dir()| och \verb|help()| men inte fullständigt. Exekveringsmiljön, d.v.s. den interaktiva interpretatorn i Python, gör dock att ''trial and error'' går betydligt smidigare än i Java vilket också gör API:t mindre livsnödvändigt. 
 
-Vi fick känslan av att vi hade kunnat komma på fler varianter på implementationer med Python än med Java, även om det inte var något vi utnyttjade.
+Vi fick känslan av att vi hade kunnat komma på fler varianter på implementationer med Python än med Java, även om det inte var något vi utnyttjade då vi bara översatte koden rakt av. Överhuvudtaget kändes Python mer dynamiskt och inbjudande till lek, inte som Java helt resultatinriktat.
 \end{document}
 
