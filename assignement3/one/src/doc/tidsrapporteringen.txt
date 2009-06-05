@@ -2,8 +2,8 @@ Java:
         mån: 5,5h
         tis: 6h
         ons: 6h
-        tors: 2h
-tot:        19.5h
+        tors: 2,5h
+tot:        20h
 
 Ruby:
-        tors: 
+        tors: 4h
