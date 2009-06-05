@@ -32,9 +32,41 @@ Mer naturlig variabel- och metodhantering; self.<något> känns lätt onaturligt
 
 \section{Python - 2h}
 
-Själva implementationen av algoritmen gick snabbare, delvis på grund av att vi stött på de flesta problemen innan. Vi visste med andra ord precis vad vi skulle skriva. Pythons hantering av fil-inläsning, avsaknad av kontrolltecken som \verb|{ }| med vänner hjälpte naturligtvis också. Loopar, iteratorer, hantering av datasamlingar som dictionaries och maps väldigt mycket behagligare än Java.
+Själva implementationen av algoritmen gick snabbare, delvis på grund av att vi stött på de flesta problemen innan. Vi visste med andra ord precis vad vi skulle skriva. Pythons hantering av fil-inläsning, avsaknad av kontrolltecken som \verb|{ }| med vänner hjälpte naturligtvis också. Loopar, iteratorer, hantering av datasamlingar som dictionaries och maps väldigt mycket behagligare än Java. Överhuvudtaget fick vi intrycket att Python är betydligt naturligare att programmera i. Java har ett antal mycket ''stiliga'' abstraktioner, saker som tilltalar på ett tekniskt plan. Exempel är konceptet med strömmar, att all inläsning och utskrift sker via strömmar är både snyggt och smart, men mängden kod som behöver skrivas för att utnyttja dem blir lätt frustrerande. Inläsning av filer kräver nästan dubbelt så mycket kod i Java som i Python, mycket på grund av just strömmarna. Överhuvudtaget märks det ganska tydligt att Java är utvecklat mot en starkt tekniskt fokuserad bakgrund, allt är väl planerat och strukturerat men kanske inte så programmerarvänligt. Jämför:
 
-Dessvärre är API:t väldigt mycket sämre dokumenterat än Javas, google är en större vän än organisationen i den officiella dokumentationen. Delvis uppvägs detta av \verb|dir()| och \verb|help()| men inte fullständigt.
+\begin{verbatim}
+def loadFromFile(self):
+	wordFile = open("newdict.txt")
+	wordLine = wordFile.readline().lower().strip()
+	while wordLine:
+		self.wordsToNumber(wordLine)
+		wordLine = wordFile.readline().lower().strip()
+	wordFile.close()
+\end{verbatim}
+\newpage
+Med:
+\begin{verbatim}
+private ArrayList<String> words = new ArrayList<String>();
+
+public void readFromFile(){
+	String str = "";
+	try{
+		BufferedReader br = new BufferedReader(new FileReader("newdict.txt"));
+		while ((str = br.readLine()) != null){
+			words.add(str.toLowerCase());
+			numberRepresentation.put(str.toLowerCase(), wordsToNumbers(str.toLowerCase()));
+		}
+	}
+	catch(FileNotFoundException fileNotFoundException){
+		System.out.println("File not found");
+	}
+	catch(IOException e){
+		System.out.println(e);
+	}
+}
+\end{verbatim}
+
+Å andra sidan är Pythons API väldigt mycket sämre dokumenterat än Javas, google är en större vän än organisationen i den officiella dokumentationen. Delvis uppvägs detta av \verb|dir()| och \verb|help()| men inte fullständigt.
 
 Vi fick känslan av att vi hade kunnat komma på fler varianter på implementationer med Python än med Java, även om det inte var något vi utnyttjade.
 \end{document}
