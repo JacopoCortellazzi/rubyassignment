@@ -1,7 +1,5 @@
 class AssignmentThree
 
-    attr_accessor :numbers, :words, :combinations
-
     def initialize
         readNumbers
         readWords
