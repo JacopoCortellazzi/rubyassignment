@@ -1,0 +1,4 @@
+Python commands:
+jythonc -w . MyJythonApp.py
+java -classpath ../../../../../../jython2.2.1/jython.jar:. DYPL MyJythonApp
+
