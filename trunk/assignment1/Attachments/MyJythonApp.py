@@ -54,13 +54,10 @@ class MyJythonApp( Jtrans ):
             
     def turnCw( self, l ):
         l = l.strip("\s*turn_cw\(\)\n")
-        #print "In trunCw: "+l
         self.calculateAngle( int(eval(l)) )
 
     def turnCcw( self, l ):
         l = l.strip("\s*turn_ccw\(\)\n")
-        #print "In trunCcw: "+l
-        #self.temp = 360 - int(l)
         self.calculateAngle( -int(eval(l)) )
         
     def put( self, l ):
@@ -69,9 +66,23 @@ class MyJythonApp( Jtrans ):
         self.x = int(l[0])
         self.y = int(l[1])
         self.current_angle = int(l[2])
-
+    
+    def forMethod(self, code, x, times):
+        print code, x, times
+        if code.find("X"):
+            code = code.replace("X", str(x))
+        for i in range(int(x), int(times)):
+            tmp = code
+            while(tmp):
+                self.regMatching(tmp)
+                tmp = self.regMatching(tmp)
+    
     def actionPerformed( self, event ):
         self.myMatching(self.obj.getCode())
+    
+    def myMatching(self, code):
+        while(code):
+            code = self.regMatching(code)
     
     def regMatching(self, code):
         if self.pen_down.match( code ):
@@ -109,20 +120,6 @@ class MyJythonApp( Jtrans ):
             self.forMethod(wholeString, x, times)
             code = code[self.for_end.match( code ).end():]
         return code
-
-    def forMethod(self, code, x, times):
-        print code, x, times
-        if code.find("X"):
-            code = code.replace("X", str(x))
-        for i in range(int(x), int(times)):
-            tmp = code
-            while(tmp):
-                self.regMatching(tmp)
-                tmp = self.regMatching(tmp)
-
-    def myMatching(self, code):
-        while(code):
-            code = self.regMatching(code)
 
     def setDYPL( self, obj ):
 	    self.obj = obj
