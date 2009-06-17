@@ -1,31 +1,33 @@
 require "yaml"
 class Model
 
-  def generate(args)
+  def Model.generate(args)
     titleReg = /title\s*:(.*)\n/
     attributeReg = /\s*attribute\s*:(.*),\s*(.*)\n*/  
-    constraintReg = /\s*constraint\s*:(.*),\s*'[a-z A-Z]*\.*(.*)'\n*/  
+    constraintReg = /\s*constraint\s*:(.*),\s*(.*)\n*/  
     file = File.new(args, "r")
     while(line = file.gets)
       if(line.match(titleReg))
-        createNewClass($1)
+        Model.createNewClass($1)
       end
       if(line.match(attributeReg))
-        createNewAttribute($1 => $2)
+        Model.createNewAttribute($1 => $2)
       end
       if(line.match(constraintReg))
-        createConstraints($1 => $2)
+        Model.createConstraints($1 => $2)
       end
     end
     file.close
-    makeConstraintsMethod()
+    Model.makeConstraintsMethod()
     return self
   end
 
-  def load_from_file(file)
+  def Model.load_from_file(file)
     attributes = []
+    att = []
     values = []
     ret = []
+    tmp = []
     f = YAML.load_file(file)
       f.each do |key, args|
       @arrayName = key
@@ -33,16 +35,35 @@ class Model
           a.each do |key , value|
             attributes << key
             values << value
-          end 
+            if (!att.include?(key))
+              att << key
+            end
+          end
           ret << @myClass.new(attributes, values)
           attributes = []
-          values = []          
+          values = []
         end
       end
-      return ret
+      ret.each do |item|
+        ok = true  
+        puts att      
+        att.each do |a|
+          begin
+            if(item.send("#{a}") == nil)
+              ok = false
+            end
+          rescue
+            puts "hade inte metoden"
+          end
+        end
+        if (ok)
+          tmp << item
+        end
+      end
+      return tmp
   end
 
-  def createNewClass(args)
+  def Model.createNewClass(args)
     @myClass = Object.const_set(args,Class.new)
     @myClass.class_eval %{def self.load_from_file(fileName)
       YAML.parse_file(fileName)
@@ -58,17 +79,17 @@ class Model
                          end}
   end
 
-  def createNewAttribute(args)
-    set_attr_reader("#{args.keys}")
-    set_attr_writer("#{args.keys}","#{args.values}")
+  def Model.createNewAttribute(args)
+    Model.set_attr_reader("#{args.keys}")
+    Model.set_attr_writer("#{args.keys}","#{args.values}")
     @myClass.class_eval %{class_variable_set :@@const, Array.new}
   end
 
-  def createConstraints(args)
+  def Model.createConstraints(args)
     @myClass.class_eval %{@@const << args} 
   end
 
-  def set_attr_writer(sym, type)
+  def Model.set_attr_writer(sym, type)
     @myClass.class_eval %{def #{sym}=(val)
     if(val.kind_of? #{type})
       if(checkConstraint(:#{sym}, val))
@@ -82,7 +103,7 @@ class Model
   end}    
 end
 
-def set_attr_reader(syms)
+def Model.set_attr_reader(syms)
   syms.each do|sym|
     @myClass.class_eval %{def #{sym}
     @#{sym}
@@ -90,32 +111,38 @@ def set_attr_reader(syms)
 end
 end
 
-def makeConstraintsMethod()
+def Model.makeConstraintsMethod()
   @myClass.class_eval %{def checkConstraint(attribute, value_to_be_checked)
     valid = true
     @@const.each do |p|
       p.each_pair do |key, value|
         key.each do |k|
           if(k.to_s == attribute.to_s)
-            if(value.to_s.eql?("! = nil"))
+            if(value.to_s.include?("! = nil"))
               if(!(value_to_be_checked != nil))
                 valid = false
                 break
               end
             end
-            if(value.to_s.eql?("size > 0"))
+            if(value.to_s.include?("size > 0"))
               if(!(value_to_be_checked.size > 0))
                 valid = false
                 break
               end
             end
-            if(value.to_s.eql?("=~ /^[A-Z]/"))
+            if(value.to_s.include?("=~ /^[A-Z]/"))
               if(!(value_to_be_checked.match(/[A-Z]/)))
                 valid = false
                 break
               end
             end
-            if(value.to_s.eql?(">= 0"))
+            if(value.to_s.include?("-30 < age && age < 75"))
+              if(!(value_to_be_checked > -30 && value_to_be_checked < 75))
+                valid = false
+                break
+              end
+            end
+            if(value.to_s.include?(">= 0"))
               if(!(value_to_be_checked >= 0))
                 valid = false
               end
