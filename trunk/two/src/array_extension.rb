@@ -6,8 +6,9 @@ class Array
         args.each_pair do |key, value|
           value.each do |v|
             if p.send(key) == v
-              puts p.name
-              puts p.age
+              #puts p.name
+              #puts p.age
+              return p
               stop = true
             end
           end
@@ -24,7 +25,8 @@ class Array
         min = interval.fetch(:min)
         self.each do |p|
           if p.send(attribute) && p.send(attribute)>=min && p.send(attribute) <= max
-            puts p.name,p.age
+            #puts p.name,p.age
+            return p
             stop = true
           end
           if stop
@@ -34,7 +36,8 @@ class Array
       else
         self.each do |p|
           if p.send(attribute) && p.send(attribute) <= max
-            puts p.name,p.age
+            #puts p.name,p.age
+            return p
             stop = true
           end
           if stop
@@ -45,13 +48,15 @@ class Array
     end
   end
   def select_all(args)
+    tmp_arr = []
     if args.size == 1
       self.each do |p|
         args.each_pair do |key, value|
           value.each do |v|
             if p.send(key) == v
-              puts p.name
-              puts p.age
+              tmp_arr << p
+              #puts p.name
+              #puts p.age
             end
           end
         end
@@ -64,36 +69,43 @@ class Array
         min = interval.fetch(:min)
         self.each do |p|
           if p.send(attribute) && p.send(attribute) >= min && p.send(attribute) <= max
-            puts p.name,p.age
+            tmp_arr << p
+            #puts p.name,p.age
           end
         end
       else
         self.each do |p|
           if p.send(attribute) && p.send(attribute) <= max
-            puts p.name,p.age
+            tmp_arr << p
+            #puts p.name,p.age
           end
         end
       end
     end
+    return tmp_arr
   end
 
   def method_missing(method_name, *args)
     method_name = method_name.to_s
     if(method_name.match(/select_first_where_(.*)_is$/) )
-      select_first($1.to_sym => args)
+      Array.class_eval %{def select_first_where_#{$1}_is(param); return select_first("#{$1}" => param); end}
+      return select_first($1.to_sym => args)
     elsif(method_name.match(/select_first_where_(.*)_is_in/))
+      Array.class_eval %{def select_first_where_#{$1}_is_in(*param); if(param.size  > 1);return select_first(:name => "#{$1}", :interval => {:min => param[0], :max => param[1]}) ;end; end}
       if(args.size  > 1)
-        select_first(:name => $1.to_sym, :interval => {:min => args[0], :max => args[1]})
+        return select_first(:name => $1.to_sym, :interval => {:min => args[0], :max => args[1]})
       else
-        select_first(:name => $1.to_sym, :interval => {:max => args[0]}) 
+        return select_first(:name => $1.to_sym, :interval => {:max => args[0]}) 
       end
     elsif(method_name.match(/select_all_where_(.*)_is$/) )
-      select_all($1.to_sym => args)
+      Array.class_eval %{def select_all_where_#{$1}_is(param); return select_all("#{$1}" => param); end}
+      return select_all($1.to_sym => args)
     elsif(method_name.match(/select_all_where_(.*)_is_in/))
+      Array.class_eval %{def select_all_where_#{$1}_is_in(*param); if(param.size  > 1);return select_all(:name => "#{$1}", :interval => {:min => param[0], :max => param[1]}) ;end; end}
       if(args.size > 1)
-        select_all(:name => $1.to_sym, :interval=> {:min => args[0], :max => args[1]})
+        return select_all(:name => $1.to_sym, :interval=> {:min => args[0], :max => args[1]})
       else
-        select_all(:name => $1.to_sym, :interval => {:max => args[0]}) 
+        return select_all(:name => $1.to_sym, :interval => {:max => args[0]}) 
       end
     end
   end
