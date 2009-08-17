@@ -9,7 +9,7 @@ class Model
         dsl.instance_eval(File.read(filename))
 			dsl.instance_eval %{
 									def load_from_file(filename)
-										p #{@newClass}
+										#p #{@newClass}
 										@newClass.load_from_file(filename)
 									end
 									}
@@ -33,7 +33,7 @@ class Model
 											rescue
 											end
 										end
-										p ret
+										#p ret
 										return ret
 									end
 			}
@@ -45,7 +45,7 @@ class Model
 									end
 
 									}
-		puts @newClass
+		#puts @newClass
     end
     
     def attribute(sym, args)
@@ -70,9 +70,9 @@ class Model
 		  							old_#{sym} = @#{sym}
 									@#{sym} = val
 									if @@#{sym}_constraints.nil?
-										p "no constraints"
+										#p "no constraints"
 									else 
-										p "attr_writer for "+#{sym}.to_s
+										#p "attr_writer for "+#{sym}.to_s
 										@@#{sym}_constraints.each do |c|
 											if !eval(c) || @#{sym} == nil
 												@#{sym} = old_#{sym}
@@ -96,7 +96,7 @@ class Model
 	def constraint(sym, args)
 		@newClass.class_eval %{
 									@@#{sym}_constraints << %(#{args})
-									p @@#{sym}_constraints
+									#p @@#{sym}_constraints
 									}
 	end
 

@@ -103,11 +103,6 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal(@array.select_first_where_name_is( ['Tobias', 'Johan'] ), @johan )
   end
 
-  	def test_select_single_age
-  		assert_equal(@array.select_first_where_age_is(32), @beatrice)
-	end
-
-
   def test_select_first_where_age_is_in
     assert_equal(@array.methods.include?("select_first_where_age_is_in"), false,
 		 "Possible cheating? select_first_where_age_is_in exists in Array")
@@ -168,7 +163,7 @@ class GeneratorTest < Test::Unit::TestCase
     end
     ["array_extension.rb", "code_generation.rb"].each do |fn|
       File::open(fn, "r") do |f|
-	assert_equal(f.readlines.any? {|l| l =~ /personclass/ }, false, "Looks like you've looked to closely at the unit test suite!")
+  assert_equal(f.readlines.any? {|l| l =~ /personclass/ }, false, "Looks like you've looked to closely at the unit test suite!")
       end
     end
   end
@@ -233,4 +228,3 @@ class GeneratorTest < Test::Unit::TestCase
   end
   
 end
-
