@@ -103,6 +103,11 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal(@array.select_first_where_name_is( ['Tobias', 'Johan'] ), @johan )
   end
 
+  	def test_select_single_age
+  		assert_equal(@array.select_first_where_age_is(32), @beatrice)
+	end
+
+
   def test_select_first_where_age_is_in
     assert_equal(@array.methods.include?("select_first_where_age_is_in"), false,
 		 "Possible cheating? select_first_where_age_is_in exists in Array")
