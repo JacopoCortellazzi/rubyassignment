@@ -5,3 +5,4 @@ constraint :name, 'name != nil'
 constraint :name, 'name.size > 0'
 constraint :name, 'name =~ /^[A-Z]/'
 constraint :age, 'age >= 0'
+constraint :age,  %(-30 < age && age < 75)
