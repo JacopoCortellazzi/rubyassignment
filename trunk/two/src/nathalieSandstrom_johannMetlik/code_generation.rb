@@ -1,157 +1,100 @@
-require "yaml"
+require 'yaml'
+
 class Model
-
-  def Model.generate(args)
-    titleReg = /title\s*:(.*)\n/
-    attributeReg = /\s*attribute\s*:(.*),\s*(.*)\n*/  
-    constraintReg = /\s*constraint\s*:(.*),\s*(.*)\n*/  
-    file = File.new(args, "r")
-    while(line = file.gets)
-      if(line.match(titleReg))
-        Model.createNewClass($1)
-      end
-      if(line.match(attributeReg))
-        Model.createNewAttribute($1 => $2)
-      end
-      if(line.match(constraintReg))
-        Model.createConstraints($1 => $2)
-      end
+    
+    def Model.generate(filename)
+      @newClass = new
+      @newClass.instance_eval(File.read(filename))
+			create_load_from_file(filename)
+			@newClass
     end
-    file.close
-    Model.makeConstraintsMethod()
-    return self
-  end
-
-  def Model.load_from_file(file)
-    attributes = []
-    att = []
-    values = []
-    ret = []
-    tmp = []
-    f = YAML.load_file(file)
-      f.each do |key, args|
-      @arrayName = key
-        args.each do |a|
-          a.each do |key , value|
-            attributes << key
-            values << value
-            if (!att.include?(key))
-              att << key
-            end
-          end
-          ret << @myClass.new(attributes, values)
-          attributes = []
-          values = []
-        end
-      end
-      ret.each do |item|
-        ok = true  
-        puts att      
-        att.each do |a|
-          begin
-            if(item.send("#{a}") == nil)
-              ok = false
-            end
-          rescue
-            puts "hade inte metoden"
-          end
-        end
-        if (ok)
-          tmp << item
-        end
-      end
-      return tmp
-  end
-
-  def Model.createNewClass(args)
-    @myClass = Object.const_set(args,Class.new)
-    @myClass.class_eval %{def self.load_from_file(fileName)
-      YAML.parse_file(fileName)
-      end}
-    @myClass.class_eval %{def initialize(attri, vali)
-                           begin
-                             for i in 1..attri.size() do
-                               self.method("#\{attri[i-1]\}=").call(vali[i-1])
-                             end
-                           rescue
-                             puts "Invalid value on: "+attri[i-1]+" where value is: "+vali[i-1].to_s
-                           end
-                         end}
-  end
-
-  def Model.createNewAttribute(args)
-    Model.set_attr_reader("#{args.keys}")
-    Model.set_attr_writer("#{args.keys}","#{args.values}")
-    @myClass.class_eval %{class_variable_set :@@const, Array.new}
-  end
-
-  def Model.createConstraints(args)
-    @myClass.class_eval %{@@const << args} 
-  end
-
-  def Model.set_attr_writer(sym, type)
-    @myClass.class_eval %{def #{sym}=(val)
-    if(val.kind_of? #{type})
-      if(checkConstraint(:#{sym}, val))
-        @#{sym} = val
-      else
-        raise "Invalid value"
-      end
-    else
-      raise "Type Error"
+    
+    def Model.create_load_from_file(sym)
+      @newClass.instance_eval %{
+		  						def load_from_file(filename)
+										@myClass.load_from_file(filename)
+									end
+			  					}
     end
-  end}    
-end
-
-def Model.set_attr_reader(syms)
-  syms.each do|sym|
-    @myClass.class_eval %{def #{sym}
-    @#{sym}
-  end}
-end
-end
-
-def Model.makeConstraintsMethod()
-  @myClass.class_eval %{def checkConstraint(attribute, value_to_be_checked)
-    valid = true
-    @@const.each do |p|
-      p.each_pair do |key, value|
-        key.each do |k|
-          if(k.to_s == attribute.to_s)
-            if(value.to_s.include?("! = nil"))
-              if(!(value_to_be_checked != nil))
-                valid = false
-                break
-              end
-            end
-            if(value.to_s.include?("size > 0"))
-              if(!(value_to_be_checked.size > 0))
-                valid = false
-                break
-              end
-            end
-            if(value.to_s.include?("=~ /^[A-Z]/"))
-              if(!(value_to_be_checked.match(/[A-Z]/)))
-                valid = false
-                break
-              end
-            end
-            if(value.to_s.include?("-30 < age && age < 75"))
-              if(!(value_to_be_checked > -30 && value_to_be_checked < 75))
-                valid = false
-                break
-              end
-            end
-            if(value.to_s.include?(">= 0"))
-              if(!(value_to_be_checked >= 0))
-                valid = false
-              end
-            end
-          end
-        end
-      end
+    
+    def load_from_file(filename)
+      @myClass.class_eval %{
+									def self.load_from_file(filename)
+									  attributes = []
+									  ret = []									
+										attributes = YAML::load(File.open(filename)).values[0]
+										attributes.each do |n|
+											begin
+												obj = self.new(n)
+												ret << obj
+											rescue
+											end
+										end
+										return ret
+									end
+			}
     end
-    return valid 
-  end}
-end  
+    
+        
+    def title(sym)
+		@myClass = Object.const_set(sym, Class.new)
+		load_from_file(sym)
+		@myClass.class_eval %{
+									def initialize(args)
+										args.each do |arg|
+											self.method("#\{arg[0]\}=").call(arg[1])
+										end
+									end
+									}
+    end
+    
+    def set_attr_reader(sym)
+      @myClass.class_eval %{def #{sym}
+                        @#{sym}
+                     end}
+    end
+
+	def constraint(sym, args)
+		@myClass.class_eval %{
+									@@#{sym}_constraints << %(#{args})
+									}
+	end
+    
+    def attribute(sym, args)
+      set_attr_writer(sym, args)
+      set_attr_reader(sym)
+		@myClass.class_eval %{
+									class_variable_set :@@#{sym}_constraints, Array.new
+									def self.#{sym}_constraints
+										@@#{sym}_constraints
+									end
+									def #{sym}_constraints
+										@@#{sym}_constraints
+									end
+									}
+
+    end
+
+   def set_attr_writer(sym, args)
+        @myClass.class_eval %{def #{sym}= (val)
+		  						if val.kind_of? #{args}
+		  							old_#{sym} = @#{sym}
+									@#{sym} = val
+									if @@#{sym}_constraints.nil?
+									  puts "No set constraints"
+									else 
+										@@#{sym}_constraints.each do |con|
+											if !eval(con) || @#{sym} == nil
+												@#{sym} = old_#{sym}
+												raise "Invalid value!"
+											end
+										end
+									end
+								else
+										raise "Invalid type!"
+								end
+                     end
+       }
+   end
+   
 end
