@@ -1,114 +1,104 @@
 class Array
-	def select_first(args)
-		#p args
-		#puts args.size
-		if args.length == 1 
-			select_single(:first, args)
-		elsif args.length == 2
-			if args[:interval].length == 2
-				select_single(:first, args[:name] => (args[:interval][:min] .. args[:interval][:max]).to_a)
-			elsif args[:interval].length == 1
-				select_single(:first, args[:name] => (0 .. args[:interval][:max]).to_a)
-			end
-		else
-			throw error
-		end
-	end
+	#def select_first(args)
+	#	select(:first => args)
+	#end
 
-	def select_single(*args)
-		print ('DEBUG: select_single, args: ')
-		p args
-		key = args[1].keys[0]
-		value = args[1][key]
+	def select(args)
 		retarr = []
-		self.each do |e|
-			if value.class == Array
-				value.each do |val|
-					if e.send(key) == val
-						if args[0] == :first
-							return e
-						elsif args[0] == :all
-							retarr<<e
+		params = args.values[0]
+
+		self.each do |element|
+			if params[:interval]
+				if params[:interval][:min]
+					if (element.send(params.values[0]) >= params[:interval][:min] &&
+						element.send(params.values[0]) <= params[:interval][:max])
+						if args[:all]
+							#p (args.keys[0])
+							retarr << element
+						else
+							return element
+						end
+					end
+				else
+					if element.send(params.values[0]) <= params[:interval][:max]
+						if args[:all]
+							#p (args.keys[0])
+							retarr << element
+						else
+							return element
 						end
 					end
 				end
-			elsif e.send(key) == value
-				if args[0] == :first
-					return e
-				elsif args[0] == :all
-					retarr<<e
+
+			elsif params.values[0].class == Array
+				#puts ('ALL: ARRAY')
+				params.values[0].each do |value|
+					if value == element.send(params.keys[0].to_s)
+						if args[:all]
+							#p (args.keys[0])
+							retarr << element
+						else
+							return element
+						end
+					end
+				end
+			else
+				#puts('ALL: SINGLE')
+				puts('key: '+params.keys[0].to_s+', value: '+params.values[0].to_s)
+				if element.send(params.keys[0].to_s) == params.values[0]
+					if args[:all]
+						retarr << element
+						print('SINGLE inlooop ')
+						p(retarr)
+					else
+						return element
+					end
 				end
 			end
 		end
+		print('calling args: ')
+		p(args)
+		print('return: ')
+		p(retarr)
 		return retarr
 	end
 
-	def select_all(args)
-		print ('DEBUG: select_all, args:')
-		p args
-		if args.length == 1
-			p ('DEBUG: goto select_single')
-			select_single(:all, args)
-		elsif args.length == 2
-			if args[:interval].length == 2
-				select_single(:all, args[:name] => (args[:interval][:min] .. args[:interval][:max]).to_a)
-			elsif args[:interval].length == 1
-				select_single(:all, args[:name] => (-500 .. args[:interval][:max]).to_a)
-			end
-		else
-			throw error
-		end
-	end
+	#def select_all(args)
+	#	return select(:all => args)
+	#end
 	
 	def method_missing(method, *args)
-
-     if attribute = method.to_s.match(/^select_first_where_(.*)_is$/)
-		  eval %{def #{method.to_s}(params)
-		  	print ('DEBUG: intern, params: ')
-			p params
-         select_first("#{attribute[1]}" => params)
-			end}
-			self.send(method, *args)
-     elsif attribute = method.to_s.match(/^select_first_where_(.*)_is_in$/)
-		  eval %{def #{method.to_s}(*params)
-		  		if params.length == 1
-	         	select_first(:name => "#{attribute[1]}", :interval => {:min => 0, :max => params[0]})
-				elsif params.length == 2
-	         	select_first(:name => "#{attribute[1]}", :interval => {:min => params[0], :max => params[1]})
+		#puts('DEBUG: bla: '+method.to_s)
+		#p(*args)
+		#p(args)
+		if method.to_s.match(/^select_first$/)
+			eval %{def #{method.to_s}(params)
+					return select(:first => params)
 				end
-			end}
-#			print(' DEBUG Call first: '+method.to_s+', ')
-#			p args
-			self.send(method, *args)
-
-     elsif attribute = method.to_s.match(/^select_all_where_(.*)_is$/)
-		  eval %{def #{method.to_s}(params)
-         select_all("#{attribute[1]}" => params)
-			end}
-			self.send(method, *args)
-     elsif attribute = method.to_s.match(/^select_all_where_(.*)_is_in$/)
-		  eval %{def #{method.to_s}(*params)
-		  		if params.length == 1
-	         	select_all(:name => "#{attribute[1]}", :interval => {:min => 0, :max => params[0]})
-				elsif params.length == 2
-	         	select_all(:name => "#{attribute[1]}", :interval => {:min => params[0], :max => params[1]})
+			}
+		elsif method.to_s.match(/^select_all$/)
+			eval %{def #{method.to_s}(params)
+					return select(:all => params)
 				end
-			end}
-			self.send(method, *args)
-     end
-    end
+			}
+		elsif method.to_s.match(/^select_(.*)_where_(.*)_is$/)
+			p('DEBUG: case two: ')
+			p(*args)
+			eval %{def #{method.to_s}(params)
+					p(self)
+         		return select("#{$1}" => {"#{$2}" => params})
+				end
+			}
+		elsif method.to_s.match(/^select_(.*)_where_(.*)_is_in$/)
+		  eval %{def #{method.to_s}(*params)
+		  			if params.length == 1
+	         		return select("#{$1}" => {:name => "#{$2}", :interval => {:max => params[0]}})
+					elsif params.length == 2
+	         		return select("#{$1}" => {:name => "#{$2}", :interval => {:min => params[0], :max => params[1]}})
+					end
+				end
+		  }
+		end
+		self.send(method, *args)
+	end
 end
-
-#	if what = method.to_s.match(/^select_(.*)$/)
-#		if attribute = what.to_s.match(/^first$/)
-#			select(:single, args)
-#		elsif attribute = what.match(/^first_(.*)_is$/)
-#			select(:single, attribute[1].to_sym => args)
-#		elsif attribute = what.match(/^first_(.*)_is_in$/)
-#			select(:single, attribute[1].to_sym => args)
-#		elsif attribute = what.match(/^all$/)
-#		elsif attribute = what.match(/^all_(.*)_is$/)
-#		elsif attribute = what.match(/^all_(.*)_is_in$/)
-#		end
-#	end
-#
