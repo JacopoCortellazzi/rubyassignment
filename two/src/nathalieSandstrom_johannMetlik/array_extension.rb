@@ -6,7 +6,7 @@ class Array
         args.each_pair do |key, value|
         puts key
         puts value
-          value.each do |v| #BUGGAR UT NÄR DET ÄR FIXNUM .each FINNS INTE PÅ FIXNUM!
+          value.each do |v| #
             if p.send(key) == v
               #puts p.name
               #puts p.age
