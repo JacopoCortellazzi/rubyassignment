@@ -56,8 +56,8 @@ class Array
 				end
 			end
 		end
-		print('calling args: ')
-		p(args)
+		#print('calling args: ')
+		#p(args)
 		print('return: ')
 		p(retarr)
 		return retarr
@@ -85,8 +85,12 @@ class Array
 			p('DEBUG: case two: ')
 			p(*args)
 			eval %{def #{method.to_s}(params)
-					p(self)
-         		return select("#{$1}" => {"#{$2}" => params})
+#					puts "$1 = "+"#{$1}"
+#					puts "$2 = "+"#{$2}"
+#					puts "params = "+params
+#					p(self)
+					#TODO här är (var) felet!
+         		    return select("#{$1}".to_sym => {"#{$2}" => params})
 				end
 			}
 		elsif method.to_s.match(/^select_(.*)_where_(.*)_is_in$/)
